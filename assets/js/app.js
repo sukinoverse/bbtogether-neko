@@ -81,6 +81,54 @@ if ("IntersectionObserver" in window) {
   revealEls.forEach((el) => el.classList.add("is-visible"))
 }
 
+// Native swipe gallery with keyboard and button controls
+const photoStory = document.querySelector("#wedding-story")
+if (photoStory) {
+  const rail = photoStory.querySelector("[data-photo-rail]")
+  const slides = [...photoStory.querySelectorAll("[data-photo-slide]")]
+  const previous = photoStory.querySelector("[data-photo-previous]")
+  const next = photoStory.querySelector("[data-photo-next]")
+  const current = photoStory.querySelector("[data-photo-current]")
+  let active = 0
+  let frame
+
+  const updateGallery = () => {
+    const center = rail.scrollLeft + rail.clientWidth / 2
+    active = slides.reduce((nearest, slide, index) => {
+      const distance = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - center)
+      const nearestDistance = Math.abs(
+        slides[nearest].offsetLeft + slides[nearest].offsetWidth / 2 - center
+      )
+      return distance < nearestDistance ? index : nearest
+    }, 0)
+
+    slides.forEach((slide, index) => slide.dataset.active = String(index === active))
+    current.textContent = String(active + 1).padStart(2, "0")
+    previous.disabled = active === 0
+    next.disabled = active === slides.length - 1
+  }
+
+  const showPhoto = (index) => {
+    const slide = slides[Math.max(0, Math.min(index, slides.length - 1))]
+    const left = slide.offsetLeft - (rail.clientWidth - slide.offsetWidth) / 2
+    rail.scrollTo({left, behavior: "smooth"})
+  }
+
+  rail.addEventListener("scroll", () => {
+    cancelAnimationFrame(frame)
+    frame = requestAnimationFrame(updateGallery)
+  }, {passive: true})
+  rail.addEventListener("keydown", (event) => {
+    if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return
+    event.preventDefault()
+    showPhoto(active + (event.key === "ArrowRight" ? 1 : -1))
+  })
+  previous.addEventListener("click", () => showPhoto(active - 1))
+  next.addEventListener("click", () => showPhoto(active + 1))
+  window.addEventListener("resize", updateGallery)
+  updateGallery()
+}
+
 // Reveal the partner question only for guests who are attending
 const rsvpAttendance = document.querySelector("#rsvp-attending")
 const rsvpPartnerField = document.querySelector("#rsvp-partner-field")

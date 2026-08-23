@@ -9,9 +9,14 @@ defmodule NekoWeb.PageControllerTest do
     document = LazyHTML.from_document(html)
 
     for section <-
-          ~w(wedding-hero wedding-invitation wedding-schedule wedding-venue wedding-rsvp wedding-seating wedding-theme wedding-guestbook) do
+          ~w(wedding-hero wedding-invitation wedding-story wedding-schedule wedding-venue wedding-rsvp wedding-seating wedding-theme wedding-guestbook) do
       assert document |> LazyHTML.query("##{section}") |> Enum.count() == 1
     end
+
+    assert document |> LazyHTML.query("#wedding-story-photos [data-photo-slide]") |> Enum.count() ==
+             4
+
+    assert document |> LazyHTML.query("#wedding-story-photos img") |> Enum.count() == 4
 
     for status <- ~w(wedding-seating-status wedding-guestbook-status) do
       assert document

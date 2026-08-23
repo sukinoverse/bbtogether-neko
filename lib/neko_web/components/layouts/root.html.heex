@@ -1,9 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
+    <meta
+      name="description"
+      content="You're invited to the wedding of Passaraporn (Bee) & Pongsatorn (Boom) — Sunday, 1 November 2026 · Misstar Cafe by Davika Wedding Venue, Bangkok · ขอเรียนเชิญร่วมเป็นเกียรติในพิธีมงคลสมรส"
+    />
+    <meta property="og:title" content="Bee & Boom — The Wedding" />
+    <meta
+      property="og:description"
+      content="Sunday, 1 November 2026 · Misstar Cafe by Davika Wedding Venue, Bangkok"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content={NekoWeb.Endpoint.url() <> ~p"/images/wedding-meadow.jpg"}
+    />
+    <meta property="og:image:width" content="1672" />
+    <meta property="og:image:height" content="941" />
+    <meta
+      property="og:image:alt"
+      content="Bee and Boom in a watercolor wedding meadow with their cats"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
     <.live_title default="Bee & Boom" suffix=" · Wedding">
       {assigns[:page_title]}
     </.live_title>

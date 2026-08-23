@@ -1,6 +1,7 @@
 /* See the Tailwind configuration guide for advanced usage
    https://tailwindcss.com/docs/configuration */
 
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Trirong:wght@300;400;500;600&display=swap");
 @import "tailwindcss" source(none);
 @source "../css";
 @source "../js";
@@ -104,16 +105,36 @@
 
 /* This file is for your main application CSS */
 
+@theme {
+  --font-wedding-serif: "Cormorant Garamond", "Trirong", Georgia, serif;
+  --font-wedding-script: "Great Vibes", "Cormorant Garamond", cursive;
+}
+
+body {
+  font-family: "Trirong", "Cormorant Garamond", Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 .font-wedding-serif {
-  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  font-family: "Cormorant Garamond", "Trirong", Georgia, serif;
 }
 
-.font-wedding-sans {
-  font-family: Avenir, "Gill Sans", "Trebuchet MS", ui-sans-serif, sans-serif;
+.reveal {
+  animation: wedding-reveal 900ms cubic-bezier(.2, .78, .2, 1) both;
 }
 
-.coming-soon-reveal {
-  animation: coming-soon-reveal 820ms cubic-bezier(.2, .78, .2, 1) both;
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 900ms cubic-bezier(.2, .65, .3, 1), transform 900ms cubic-bezier(.2, .65, .3, 1);
+}
+
+.reveal-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
 }
 
 .petal-drift {
@@ -126,10 +147,44 @@
   animation: petal-drift 9s ease-in-out infinite;
 }
 
-@keyframes coming-soon-reveal {
+.float-gentle {
+  animation: float-gentle 7s ease-in-out infinite;
+}
+
+.cloud-blob {
+  position: absolute;
+  border-radius: 9999px;
+  background: #ffffff;
+  filter: blur(38px);
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* Schedule timeline spine */
+.wedding-timeline {
+  --time-col: 4.5rem;
+}
+
+.wedding-timeline::before {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: calc(var(--time-col) + 1.25rem);
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, #cfe0ee 12%, #cfe0ee 88%, transparent);
+}
+
+@media (min-width: 640px) {
+  .wedding-timeline {
+    --time-col: 6rem;
+  }
+}
+
+@keyframes wedding-reveal {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(16px);
   }
 
   to {
@@ -148,9 +203,30 @@
   }
 }
 
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .coming-soon-reveal,
-  .petal-drift {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .petal-drift,
+  .float-gentle {
     animation: none;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

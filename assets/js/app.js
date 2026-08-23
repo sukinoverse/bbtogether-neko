@@ -46,6 +46,41 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+// Wedding countdown
+const countdown = document.querySelector("[data-countdown]")
+if (countdown) {
+  const target = new Date(countdown.dataset.countdown).getTime()
+  const cell = (k) => countdown.querySelector(`[data-count-${k}]`)
+  const pad = (n) => String(n).padStart(2, "0")
+  const tick = () => {
+    const diff = Math.max(0, target - Date.now())
+    if (diff === 0) { countdown.dataset.married = "true" }
+    cell("d").textContent = Math.floor(diff / 864e5)
+    cell("h").textContent = pad(Math.floor(diff / 36e5) % 24)
+    cell("m").textContent = pad(Math.floor(diff / 6e4) % 60)
+    cell("s").textContent = pad(Math.floor(diff / 1e3) % 60)
+  }
+  tick()
+  setInterval(tick, 1000)
+}
+
+// Reveal sections as they scroll into view
+document.documentElement.classList.add("reveal-ready")
+const revealEls = document.querySelectorAll("[data-reveal]")
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible")
+        io.unobserve(entry.target)
+      }
+    })
+  }, {threshold: 0.12})
+  revealEls.forEach((el) => io.observe(el))
+} else {
+  revealEls.forEach((el) => el.classList.add("is-visible"))
+}
+
 // The lines below enable quality of life phoenix_live_reload
 // development features:
 //
@@ -80,4 +115,3 @@ if (process.env.NODE_ENV === "development") {
     window.liveReloader = reloader
   })
 }
-

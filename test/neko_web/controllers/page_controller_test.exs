@@ -7,8 +7,15 @@ defmodule NekoWeb.PageControllerTest do
     document = LazyHTML.from_document(html)
 
     for section <-
-          ~w(wedding-hero wedding-invitation wedding-schedule wedding-venue wedding-theme) do
+          ~w(wedding-hero wedding-invitation wedding-schedule wedding-venue wedding-seating wedding-theme wedding-guestbook) do
       assert document |> LazyHTML.query("##{section}") |> Enum.count() == 1
+    end
+
+    for status <- ~w(wedding-seating-status wedding-guestbook-status) do
+      assert document
+             |> LazyHTML.query("##{status}")
+             |> LazyHTML.text()
+             |> String.contains?("Coming Soon")
     end
 
     assert document

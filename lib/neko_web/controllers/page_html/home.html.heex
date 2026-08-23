@@ -121,7 +121,7 @@
           href="#wedding-invitation"
           class="reveal mt-10 inline-flex items-center gap-2 rounded-full border border-[#8fae83]/40 bg-[#8fae83] px-7 py-3 text-sm font-medium tracking-[0.2em] text-white uppercase shadow-[0_16px_38px_rgba(122,165,141,0.4)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#7ba275] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4f7584] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7fafc] [animation-delay:520ms]"
         >
-          การ์ดเชิญ <.icon name="hero-arrow-down" class="size-4" />
+          เปิดการ์ดเชิญ <.icon name="hero-arrow-down" class="size-4" />
         </a>
       </div>
 
@@ -161,13 +161,13 @@
 
           <div class="mt-8 grid gap-6 text-sm leading-relaxed text-[#5c6a78] sm:grid-cols-[1fr_auto_1fr] sm:gap-8">
             <div>
-              <p>นายมนัส โตสารเดช (พ่อ)</p>
-              <p>นางประภาพร โตสารเดช (แม่)</p>
+              <p>นายมนัส โตสารเดช (คุณพ่อ)</p>
+              <p>นางประภาพร โตสารเดช (คุณแม่)</p>
             </div>
             <div class="self-center font-wedding-serif text-lg italic text-[#9fb89f]">และ</div>
             <div>
-              <p>นายพีระพล แผ่วสูงเนิน (พ่อ)</p>
-              <p>นางรวงพลอย แผ่วสูงเนิน (แม่)</p>
+              <p>นายพีระพล แผ่วสูงเนิน (คุณพ่อ)</p>
+              <p>นางรวงพลอย แผ่วสูงเนิน (คุณแม่)</p>
             </div>
           </div>
 
@@ -178,7 +178,7 @@
           <div class="mt-8 grid items-center gap-1 sm:grid-cols-[1fr_auto_1fr] sm:gap-6">
             <div class="sm:text-right">
               <p class="font-wedding-script text-4xl text-[#3d4450] sm:text-5xl">Passaraporn</p>
-              <p class="mt-2 text-sm text-[#5c6a78]">น.ส.ภัสราภรณ์ โตสารเดช</p>
+              <p class="mt-2 text-sm text-[#5c6a78]">นางสาวภัสราภรณ์ โตสารเดช</p>
               <p class="mt-0.5 text-sm font-semibold text-[#4f7c67]">(บี)</p>
             </div>
             <div class="my-4 grid place-items-center sm:my-0">
@@ -203,6 +203,9 @@
             <.icon name="hero-map-pin" class="size-4 text-[#e8a7b9]" />
             Misstar Cafe by Davika Wedding Venue, Bangkok
           </p>
+          <p class="mt-7 text-xs leading-relaxed text-[#7a8793]">
+            ขออภัยหากมิได้มาเรียนเชิญด้วยตนเอง
+          </p>
         </div>
       </div>
     </div>
@@ -223,7 +226,7 @@
 
     <div class="relative mx-auto max-w-2xl text-center" data-reveal>
       <p class="text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#617080]">
-        Order of the day
+        Our day, together
       </p>
       <h2 class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl">
         กำหนดการพิธีมงคลสมรส
@@ -311,8 +314,202 @@
           rel="noopener noreferrer"
           class="mt-8 inline-flex items-center gap-2 rounded-full border border-[#7c9cb4]/40 bg-[#7c9cb4] px-7 py-3 text-sm font-medium tracking-[0.2em] text-white uppercase shadow-[0_16px_38px_rgba(124,156,180,0.5)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#6d8ca5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4f7584] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f7fafc]"
         >
-          <.icon name="hero-map-pin" class="size-4" /> Google Maps
+          <.icon name="hero-map-pin" class="size-4" /> ดูเส้นทาง
         </a>
+      </div>
+    </div>
+  </section>
+
+  <%!-- ===== RSVP ===== --%>
+  <section
+    id="wedding-rsvp"
+    aria-labelledby="wedding-rsvp-title"
+    class="relative overflow-hidden bg-gradient-to-b from-[#f5f8fa] via-[#edf4f2] to-[#f5f8fa] px-5 py-20 sm:px-9 sm:py-28"
+  >
+    <div aria-hidden="true">
+      <span class="cloud-blob left-[-5rem] top-12 size-64"></span>
+      <span class="cloud-blob right-[-4rem] bottom-8 size-52"></span>
+      <span class="petal-drift left-[9%] top-[24%] bg-[#f5b8c9]"></span>
+      <span class="petal-drift right-[10%] bottom-[18%] bg-[#bad9c3] [animation-delay:1.5s]">
+      </span>
+    </div>
+
+    <div class="relative mx-auto max-w-4xl" data-reveal>
+      <div class="text-center">
+        <p class="text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#617080]">
+          Will you join us?
+        </p>
+        <h2
+          id="wedding-rsvp-title"
+          class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl"
+        >
+          มาฉลองด้วยกันไหม
+        </h2>
+        <p class="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-[#617080]">
+          บอกเราได้เลย แล้วเราจะเตรียมทุกอย่างไว้ต้อนรับคุณ
+        </p>
+      </div>
+
+      <div class="mt-10 overflow-hidden rounded-[2.5rem] border border-white/85 bg-white/70 shadow-[0_32px_90px_rgba(85,108,130,0.16)] backdrop-blur-sm md:grid md:grid-cols-[0.82fr_1.18fr]">
+        <div class={[
+          "relative min-h-72 flex-col items-center justify-center overflow-hidden border-b border-[#d7e1e9]/70 bg-gradient-to-br from-[#e4efe8] via-[#edf3eb] to-[#f7e9ed] px-8 py-12 text-center md:flex md:border-r md:border-b-0",
+          if(@rsvp_status, do: "hidden", else: "flex")
+        ]}>
+          <span class="absolute -left-10 -top-10 size-36 rounded-full bg-white/45 blur-2xl">
+          </span>
+          <span class="absolute -right-12 -bottom-12 size-44 rounded-full bg-[#f4cbd7]/25 blur-2xl">
+          </span>
+
+          <div class="relative">
+            <span class="mx-auto grid size-16 place-items-center rounded-full border border-white/90 bg-white/75 text-[#7aa58d] shadow-[0_14px_40px_rgba(85,108,130,0.14)]">
+              <.icon name="hero-envelope-open" class="size-7" />
+            </span>
+            <p class="mt-7 font-wedding-script text-5xl leading-none text-[#3d4450]">
+              <%= case @rsvp_status do %>
+                <% "declined" -> %>
+                  With love, always
+                <% status when status in ["attending", "attending_with_partner"] -> %>
+                  Can’t wait to celebrate
+                <% _ -> %>
+                  A place for you
+              <% end %>
+            </p>
+            <div
+              class="mx-auto mt-6 flex max-w-40 items-center gap-3 text-[#e8a7b9]"
+              aria-hidden="true"
+            >
+              <span class="h-px flex-1 bg-gradient-to-r from-transparent to-[#b9cbd7]"></span>
+              <.icon name="hero-heart-solid" class="size-4" />
+              <span class="h-px flex-1 bg-gradient-to-l from-transparent to-[#b9cbd7]"></span>
+            </div>
+            <p class="mt-5 text-sm leading-relaxed text-[#5c6a78]">
+              <%= case @rsvp_status do %>
+                <% "declined" -> %>
+                  ขอบคุณที่เป็นส่วนหนึ่ง<br />ของความทรงจำของเรา
+                <% status when status in ["attending", "attending_with_partner"] -> %>
+                  นับวันรอที่จะได้<br />ฉลองช่วงเวลานี้ด้วยกัน
+                <% _ -> %>
+                  เพราะวันสำคัญจะพิเศษขึ้น<br />เมื่อมีคุณอยู่ด้วย
+              <% end %>
+            </p>
+          </div>
+        </div>
+
+        <div class="px-6 py-9 sm:px-10 sm:py-11">
+          <div
+            :if={@rsvp_status}
+            id="rsvp-success"
+            role="status"
+            aria-live="polite"
+            class="relative flex min-h-[25rem] flex-col items-center justify-center overflow-hidden text-center"
+          >
+            <span class="absolute left-[12%] top-[12%] size-20 rounded-full bg-[#e5f0e9]/70 blur-2xl">
+            </span>
+            <span class="absolute right-[10%] bottom-[14%] size-24 rounded-full bg-[#f7dfe6]/70 blur-2xl">
+            </span>
+
+            <span class="relative grid size-20 place-items-center rounded-full border border-[#a9c4b6]/60 bg-[#e7f1eb] text-[#6f9b83] shadow-[0_16px_40px_rgba(111,155,131,0.2)]">
+              <span class="absolute inset-2 rounded-full border border-white/90"></span>
+              <.icon name="hero-check" class="relative size-8" />
+            </span>
+            <p class="mt-7 text-[0.62rem] font-semibold uppercase tracking-[0.38em] text-[#64806b]">
+              {if(@rsvp_status == "declined", do: "Thank you", else: "You’re all set")}
+            </p>
+            <h3 class="mt-3 font-wedding-serif text-3xl text-[#3d4450]">
+              {if(@rsvp_status == "declined", do: "ขอบคุณที่บอกเรานะ", else: "แล้วเจอกันนะ")}
+            </h3>
+            <p class="mt-4 max-w-sm text-sm leading-7 text-[#5c6a78]">
+              <%= case @rsvp_status do %>
+                <% "attending_with_partner" -> %>
+                  เราจะเตรียมไว้ต้อนรับ<br />คุณและคนพิเศษ รวม 2 ท่าน
+                <% "attending" -> %>
+                  เราจะเตรียมที่ไว้รอคุณ 1 ท่าน
+                <% "declined" -> %>
+                  หวังว่าจะได้เจอกันในโอกาสหน้า
+              <% end %>
+            </p>
+            <div class="mt-7 flex items-center gap-3 text-[#e8a7b9]" aria-hidden="true">
+              <span class="h-px w-12 bg-gradient-to-r from-transparent to-[#c8d7df]"></span>
+              <.icon name="hero-heart-solid" class="size-3.5" />
+              <span class="h-px w-12 bg-gradient-to-l from-transparent to-[#c8d7df]"></span>
+            </div>
+            <p class="mt-5 font-wedding-serif text-sm tracking-[0.16em] text-[#6b7783]">
+              Bee &amp; Boom · 01.11.2026
+            </p>
+          </div>
+
+          <.form
+            :if={!@rsvp_status}
+            for={@rsvp_form}
+            id="wedding-rsvp-form"
+            action={~p"/rsvp"}
+            method="post"
+            class="space-y-6"
+          >
+            <.input
+              field={@rsvp_form[:name]}
+              id="rsvp-name"
+              type="text"
+              label="ชื่อที่เราเรียกคุณ / Name or nickname"
+              autocomplete="name"
+              maxlength="120"
+              required
+              placeholder="ชื่อเล่น นามปากกา หรือชื่อที่คุ้นเคย"
+              class="mt-2 h-13 w-full rounded-2xl border border-[#cbd9e3] bg-white/85 px-4 text-[0.95rem] text-[#3d4450] shadow-sm outline-none transition placeholder:text-[#9aa7b2] focus:border-[#7aa58d] focus:ring-4 focus:ring-[#7aa58d]/12"
+              error_class="border-[#d78fa5] ring-4 ring-[#d78fa5]/10"
+            />
+
+            <.input
+              field={@rsvp_form[:attending]}
+              id="rsvp-attending"
+              type="select"
+              label="มาร่วมงานกับเราไหม?"
+              prompt="เลือกคำตอบ"
+              options={[{"ไปแน่นอน", true}, {"เสียดาย ไปไม่ได้", false}]}
+              required
+              class="mt-2 h-13 w-full appearance-none rounded-2xl border border-[#cbd9e3] bg-white/85 px-4 text-[0.95rem] text-[#3d4450] shadow-sm outline-none transition focus:border-[#7aa58d] focus:ring-4 focus:ring-[#7aa58d]/12"
+              error_class="border-[#d78fa5] ring-4 ring-[#d78fa5]/10"
+            />
+
+            <div
+              id="rsvp-partner-field"
+              class={["rsvp-partner-field", @show_partner? && "is-visible"]}
+              aria-hidden={to_string(!@show_partner?)}
+            >
+              <div class="overflow-hidden">
+                <div class="rounded-2xl border border-[#bfd4ca] bg-[#e9f2ed]/70 px-5 py-4">
+                  <.input
+                    field={@rsvp_form[:bringing_partner]}
+                    id="rsvp-bringing-partner"
+                    type="checkbox"
+                    label="ฉันจะพาคนพิเศษมาด้วย"
+                    disabled={!@show_partner?}
+                    class="rsvp-checkbox size-5 rounded-md border border-[#9fbcae] bg-white focus:ring-4 focus:ring-[#7aa58d]/20"
+                  />
+                  <p class="pl-7 text-xs leading-relaxed text-[#617080]">
+                    เราจะเตรียมไว้สำหรับ 2 ท่าน
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <button
+              id="rsvp-submit"
+              type="submit"
+              class="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#7aa58d]/30 bg-[#7aa58d] px-7 py-3.5 text-sm font-medium tracking-[0.16em] text-white shadow-[0_16px_38px_rgba(122,165,141,0.35)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#6f9b83] hover:shadow-[0_20px_46px_rgba(122,165,141,0.42)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4f7584] focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70 phx-submit-loading:pointer-events-none phx-submit-loading:opacity-70"
+            >
+              ยืนยันคำตอบ
+              <.icon
+                name="hero-heart"
+                class="size-4 transition-transform duration-300 group-hover:scale-110"
+              />
+            </button>
+
+            <p class="flex items-center justify-center gap-1.5 text-center text-[0.7rem] text-[#7a8793]">
+              <.icon name="hero-lock-closed" class="size-3.5" /> ใช้คำตอบนี้เพื่อเตรียมต้อนรับคุณเท่านั้น
+            </p>
+          </.form>
+        </div>
       </div>
     </div>
   </section>
@@ -332,16 +529,16 @@
 
     <div class="relative mx-auto max-w-3xl text-center" data-reveal>
       <p class="text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#617080]">
-        Seating Plan
+        Find your place
       </p>
       <h2
         id="wedding-seating-title"
         class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl"
       >
-        ผังที่นั่ง
+        ที่นั่งของคุณ
       </h2>
       <p class="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-[#617080]">
-        ตรวจสอบผังโต๊ะและค้นหาที่นั่งของคุณได้ที่นี่
+        ใกล้วันงาน กลับมาค้นหาโต๊ะและที่นั่งของคุณได้ที่นี่
       </p>
 
       <div class="mt-10 overflow-hidden rounded-[2.5rem] border border-white/80 bg-white/65 text-left shadow-[0_30px_80px_rgba(85,108,130,0.14)] backdrop-blur-sm sm:grid sm:grid-cols-[1.1fr_0.9fr]">
@@ -388,7 +585,7 @@
             Coming Soon
           </span>
           <p class="mt-5 font-wedding-serif text-lg leading-relaxed text-[#536270]">
-            เรากำลังจัดเตรียมผังที่นั่ง<br />สำหรับแขกทุกท่าน
+            เราจะเปิดให้ค้นหาโต๊ะและที่นั่ง<br />ได้ที่นี่ใกล้วันงาน
           </p>
         </div>
       </div>
@@ -403,10 +600,12 @@
     <span class="cloud-blob right-[-4rem] top-10 size-48" aria-hidden="true"></span>
 
     <div class="relative mx-auto max-w-xl text-center" data-reveal>
-      <p class="text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#617080]">Theme</p>
+      <p class="text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#617080]">
+        Dress in our colors
+      </p>
       <h2 class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl">สีธีมงาน</h2>
       <p class="mt-2 font-wedding-serif text-lg italic text-[#5d6d7a]">
-        Pastel Garden <span class="text-[#506c82]">· Dusty Blue preferred</span>
+        เลือกโทนพาสเทลที่คุณชอบ <span class="text-[#506c82]">· Dusty Blue เป็นสีหลัก</span>
       </p>
       <div
         class="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
@@ -428,9 +627,6 @@
           />
         </span>
       </div>
-      <p class="mt-10 text-sm leading-relaxed text-[#617080]">
-        ขออภัยหากมิได้มาเรียนเชิญด้วยตนเอง
-      </p>
     </div>
   </section>
 
@@ -481,7 +677,7 @@
             Your wishes, our keepsake
           </p>
           <p class="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#617080]">
-            พื้นที่สำหรับข้อความจากใจและรูปภาพของทุกคนกำลังจะเปิดเร็ว ๆ นี้
+            อีกไม่นาน ที่นี่จะเต็มไปด้วยคำอวยพรและภาพความทรงจำจากทุกคน
           </p>
         </div>
       </div>

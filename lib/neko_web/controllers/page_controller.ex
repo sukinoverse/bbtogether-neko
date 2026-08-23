@@ -1,7 +1,40 @@
 defmodule NekoWeb.PageController do
   use NekoWeb, :controller
 
+  alias Neko.{Repo, Rsvp}
+
   def home(conn, _params) do
+    render_home(conn, Rsvp.changeset(%Rsvp{}, %{}))
+  end
+
+  def rsvp(conn, %{"rsvp" => params}) do
+    case %Rsvp{} |> Rsvp.changeset(params) |> Repo.insert() do
+      {:ok, rsvp} ->
+        status =
+          cond do
+            !rsvp.attending -> "declined"
+            rsvp.bringing_partner -> "attending_with_partner"
+            true -> "attending"
+          end
+
+        conn
+        |> put_flash(:rsvp_status, status)
+        |> redirect(to: ~p"/#wedding-rsvp")
+
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render_home(changeset)
+    end
+  end
+
+  def rsvp(conn, _params) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> render_home(Rsvp.changeset(%Rsvp{}, %{}))
+  end
+
+  defp render_home(conn, rsvp_changeset) do
     events = [
       %{
         time: "15.09",
@@ -26,8 +59,8 @@ defmodule NekoWeb.PageController do
       },
       %{
         time: "17.00",
-        title: "Vow Ceremony",
-        sub: "พิธีสาบานรัก",
+        title: "พิธีปฏิญาณรัก",
+        sub: "Vow Ceremony",
         icon: "hero-sparkles",
         color: "#b59ed5"
       },
@@ -45,7 +78,10 @@ defmodule NekoWeb.PageController do
     render(conn, :home,
       page_title: "งานแต่งงาน Bee & Boom",
       events: events,
-      theme_colors: theme_colors
+      theme_colors: theme_colors,
+      rsvp_form: Phoenix.Component.to_form(rsvp_changeset),
+      show_partner?: Ecto.Changeset.get_field(rsvp_changeset, :attending) == true,
+      rsvp_status: Phoenix.Flash.get(conn.assigns.flash, :rsvp_status)
     )
   end
 end

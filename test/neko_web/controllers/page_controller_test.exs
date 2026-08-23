@@ -1,13 +1,15 @@
 defmodule NekoWeb.PageControllerTest do
   use NekoWeb.ConnCase
 
+  alias Neko.{Repo, Rsvp}
+
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
     html = html_response(conn, 200)
     document = LazyHTML.from_document(html)
 
     for section <-
-          ~w(wedding-hero wedding-invitation wedding-schedule wedding-venue wedding-seating wedding-theme wedding-guestbook) do
+          ~w(wedding-hero wedding-invitation wedding-schedule wedding-venue wedding-rsvp wedding-seating wedding-theme wedding-guestbook) do
       assert document |> LazyHTML.query("##{section}") |> Enum.count() == 1
     end
 
@@ -65,5 +67,78 @@ defmodule NekoWeb.PageControllerTest do
     assert document
            |> LazyHTML.query(~s(meta[name="twitter:card"]))
            |> LazyHTML.attribute("content") == ["summary_large_image"]
+
+    assert document |> LazyHTML.query("#wedding-rsvp-form") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-name") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-attending") |> Enum.count() == 1
+  end
+
+  test "POST /rsvp saves an attending guest with a partner", %{conn: conn} do
+    conn =
+      post(conn, ~p"/rsvp", %{
+        "rsvp" => %{
+          "name" => "  สมชาย ใจดี  ",
+          "attending" => "true",
+          "bringing_partner" => "true"
+        }
+      })
+
+    assert redirected_to(conn) == "/#wedding-rsvp"
+    assert Phoenix.Flash.get(conn.assigns.flash, :rsvp_status) == "attending_with_partner"
+    refute Phoenix.Flash.get(conn.assigns.flash, :info)
+
+    assert %Rsvp{name: "สมชาย ใจดี", attending: true, bringing_partner: true} =
+             Repo.one(Rsvp)
+  end
+
+  test "GET / replaces the form with the matching RSVP confirmation" do
+    for {status, message} <- [
+          {"attending", "1 ท่าน"},
+          {"attending_with_partner", "รวม 2 ท่าน"},
+          {"declined", "หวังว่าจะได้เจอกันในโอกาสหน้า"}
+        ] do
+      conn =
+        build_conn()
+        |> init_test_session(%{})
+        |> Phoenix.Controller.fetch_flash([])
+        |> Phoenix.Controller.put_flash(:rsvp_status, status)
+        |> get(~p"/")
+
+      document = conn |> html_response(200) |> LazyHTML.from_document()
+
+      assert document |> LazyHTML.query("#rsvp-success") |> Enum.count() == 1
+      assert document |> LazyHTML.query("#rsvp-success") |> LazyHTML.text() =~ message
+      assert document |> LazyHTML.query("#wedding-rsvp-form") |> Enum.empty?()
+    end
+  end
+
+  test "POST /rsvp clears the partner answer when the guest cannot attend", %{conn: conn} do
+    conn =
+      post(conn, ~p"/rsvp", %{
+        "rsvp" => %{
+          "name" => "สมหญิง ใจดี",
+          "attending" => "false",
+          "bringing_partner" => "true"
+        }
+      })
+
+    assert redirected_to(conn) == "/#wedding-rsvp"
+    assert Phoenix.Flash.get(conn.assigns.flash, :rsvp_status) == "declined"
+
+    assert %Rsvp{attending: false, bringing_partner: false} = Repo.one(Rsvp)
+  end
+
+  test "POST /rsvp returns the form with errors when required answers are missing", %{conn: conn} do
+    conn = post(conn, ~p"/rsvp", %{"rsvp" => %{"name" => ""}})
+
+    assert html_response(conn, 422) =~ "wedding-rsvp-form"
+    assert Repo.aggregate(Rsvp, :count) == 0
+  end
+
+  test "POST /rsvp handles malformed form submissions", %{conn: conn} do
+    conn = post(conn, ~p"/rsvp", %{})
+
+    assert html_response(conn, 422) =~ "wedding-rsvp-form"
+    assert Repo.aggregate(Rsvp, :count) == 0
   end
 end

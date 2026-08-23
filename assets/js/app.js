@@ -81,6 +81,23 @@ if ("IntersectionObserver" in window) {
   revealEls.forEach((el) => el.classList.add("is-visible"))
 }
 
+// Reveal the partner question only for guests who are attending
+const rsvpAttendance = document.querySelector("#rsvp-attending")
+const rsvpPartnerField = document.querySelector("#rsvp-partner-field")
+const rsvpPartner = document.querySelector("#rsvp-bringing-partner")
+if (rsvpAttendance && rsvpPartnerField && rsvpPartner) {
+  const syncPartnerField = () => {
+    const attending = rsvpAttendance.value === "true"
+    rsvpPartnerField.classList.toggle("is-visible", attending)
+    rsvpPartnerField.setAttribute("aria-hidden", String(!attending))
+    rsvpPartner.disabled = !attending
+    if (!attending) rsvpPartner.checked = false
+  }
+
+  rsvpAttendance.addEventListener("change", syncPartnerField)
+  syncPartnerField()
+}
+
 // The lines below enable quality of life phoenix_live_reload
 // development features:
 //

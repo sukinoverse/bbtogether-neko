@@ -18,6 +18,7 @@ defmodule NekoWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    post "/rsvp", PageController, :rsvp
   end
 
   # Other scopes may use custom stacks.

@@ -14,9 +14,9 @@ defmodule NekoWeb.PageControllerTest do
     end
 
     assert document |> LazyHTML.query("#wedding-story-photos [data-photo-slide]") |> Enum.count() ==
-             4
+             8
 
-    assert document |> LazyHTML.query("#wedding-story-photos img") |> Enum.count() == 4
+    assert document |> LazyHTML.query("#wedding-story-photos img") |> Enum.count() == 8
 
     for status <- ~w(wedding-seating-status wedding-guestbook-status) do
       assert document

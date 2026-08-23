@@ -64,6 +64,47 @@ if (countdown) {
   setInterval(tick, 1000)
 }
 
+// Attempt soft autoplay and always expose an honest play/pause state
+const musicPlayer = document.querySelector("[data-music-player]")
+if (musicPlayer) {
+  const audio = musicPlayer.querySelector("[data-music-audio]")
+  const toggle = musicPlayer.querySelector("[data-music-toggle]")
+  const status = musicPlayer.querySelector("[data-music-status]")
+  const openInvitation = document.querySelector("#wedding-open-invitation")
+  let autoplayBlocked = false
+
+  const syncMusicPlayer = () => {
+    const playing = !audio.paused && !audio.ended
+    musicPlayer.dataset.state = playing ? "playing" : "paused"
+    toggle.setAttribute("aria-pressed", String(playing))
+    toggle.setAttribute("aria-label", playing ? "Pause Canon in D" : "Play Canon in D")
+    status.textContent = playing
+      ? "Canon in D · Playing softly"
+      : autoplayBlocked
+        ? "Canon in D · Tap to play"
+        : "Canon in D · Music paused"
+  }
+
+  const playMusic = async () => {
+    try {
+      await audio.play()
+      autoplayBlocked = false
+    } catch (_error) {
+      autoplayBlocked = true
+    }
+    syncMusicPlayer()
+  }
+
+  audio.volume = 0.45
+  audio.addEventListener("play", syncMusicPlayer)
+  audio.addEventListener("pause", syncMusicPlayer)
+  toggle.addEventListener("click", () => audio.paused ? playMusic() : audio.pause())
+  openInvitation.addEventListener("click", () => {
+    if (autoplayBlocked && audio.paused) playMusic()
+  }, {once: true})
+  playMusic()
+}
+
 // Reveal sections as they scroll into view
 document.documentElement.classList.add("reveal-ready")
 const revealEls = document.querySelectorAll("[data-reveal]")

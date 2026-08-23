@@ -18,6 +18,10 @@ defmodule NekoWeb.PageControllerTest do
 
     assert document |> LazyHTML.query("#wedding-story-photos img") |> Enum.count() == 8
 
+    assert document |> LazyHTML.query("#wedding-music-player") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#wedding-music-toggle") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#wedding-music[autoplay][loop]") |> Enum.count() == 1
+
     for status <- ~w(wedding-seating-status wedding-guestbook-status) do
       assert document
              |> LazyHTML.query("##{status}")

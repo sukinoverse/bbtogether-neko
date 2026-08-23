@@ -284,7 +284,10 @@ html {
 
   .photo-story-rail {
     --story-card: min(40vw, 34rem);
+    --story-gutter: max(2.25rem, calc((100vw - 72rem) / 2 + 2.25rem));
     gap: 1.5rem;
+    padding-inline: var(--story-gutter);
+    scroll-padding-inline: var(--story-gutter);
   }
 
   .photo-story-caption {

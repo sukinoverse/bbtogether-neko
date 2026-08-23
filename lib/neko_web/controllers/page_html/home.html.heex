@@ -203,7 +203,7 @@
             <.icon name="hero-map-pin" class="size-4 text-[#e8a7b9]" />
             Misstar Cafe by Davika Wedding Venue, Bangkok
           </p>
-          <p class="mt-7 text-xs leading-relaxed text-[#7a8793]">
+          <p class="mt-7 text-xs leading-relaxed text-[#66737f]">
             ขออภัยหากมิได้มาเรียนเชิญด้วยตนเอง
           </p>
         </div>
@@ -215,19 +215,8 @@
   <section
     id="wedding-story"
     aria-labelledby="wedding-story-title"
-    class="relative overflow-hidden bg-[#28323a] py-28 text-white sm:py-36"
+    class="relative overflow-hidden border-y border-[#34414a] bg-[#28323a] py-28 text-white sm:py-36"
   >
-    <div
-      class="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#f5f8fa] to-transparent"
-      aria-hidden="true"
-    >
-    </div>
-    <div
-      class="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#e8edf3] to-transparent"
-      aria-hidden="true"
-    >
-    </div>
-
     <div class="relative mx-auto flex max-w-6xl items-end justify-between gap-8 px-5 sm:px-9">
       <div class="max-w-xl" data-reveal>
         <p class="text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#b9cbd7]">
@@ -244,7 +233,11 @@
         </p>
       </div>
 
-      <div class="hidden items-center gap-3 sm:flex" aria-label="Photo controls">
+      <div
+        class="hidden items-center gap-3 sm:flex"
+        role="group"
+        aria-label="ตัวควบคุมแกลเลอรีภาพ"
+      >
         <button
           id="wedding-story-previous"
           type="button"
@@ -660,7 +653,7 @@
               />
             </button>
 
-            <p class="flex items-center justify-center gap-1.5 text-center text-[0.7rem] text-[#7a8793]">
+            <p class="flex items-center justify-center gap-1.5 text-center text-[0.7rem] text-[#66737f]">
               <.icon name="hero-lock-closed" class="size-3.5" /> ใช้คำตอบนี้เพื่อเตรียมต้อนรับคุณเท่านั้น
             </p>
           </.form>

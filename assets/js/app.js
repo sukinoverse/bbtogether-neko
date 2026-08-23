@@ -94,13 +94,19 @@ if (photoStory) {
 
   const updateGallery = () => {
     const center = rail.scrollLeft + rail.clientWidth / 2
-    active = slides.reduce((nearest, slide, index) => {
-      const distance = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - center)
-      const nearestDistance = Math.abs(
-        slides[nearest].offsetLeft + slides[nearest].offsetWidth / 2 - center
-      )
-      return distance < nearestDistance ? index : nearest
-    }, 0)
+    const maxScroll = rail.scrollWidth - rail.clientWidth
+
+    active = rail.scrollLeft <= 1
+      ? 0
+      : rail.scrollLeft >= maxScroll - 1
+        ? slides.length - 1
+        : slides.reduce((nearest, slide, index) => {
+          const distance = Math.abs(slide.offsetLeft + slide.offsetWidth / 2 - center)
+          const nearestDistance = Math.abs(
+            slides[nearest].offsetLeft + slides[nearest].offsetWidth / 2 - center
+          )
+          return distance < nearestDistance ? index : nearest
+        }, 0)
 
     slides.forEach((slide, index) => slide.dataset.active = String(index === active))
     current.textContent = String(active + 1).padStart(2, "0")
@@ -109,8 +115,13 @@ if (photoStory) {
   }
 
   const showPhoto = (index) => {
-    const slide = slides[Math.max(0, Math.min(index, slides.length - 1))]
-    const left = slide.offsetLeft - (rail.clientWidth - slide.offsetWidth) / 2
+    const boundedIndex = Math.max(0, Math.min(index, slides.length - 1))
+    const slide = slides[boundedIndex]
+    const left = boundedIndex === 0
+      ? 0
+      : boundedIndex === slides.length - 1
+        ? rail.scrollWidth - rail.clientWidth
+        : slide.offsetLeft - (rail.clientWidth - slide.offsetWidth) / 2
     rail.scrollTo({left, behavior: "smooth"})
   }
 

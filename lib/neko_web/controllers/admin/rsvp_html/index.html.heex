@@ -1,0 +1,149 @@
+<div id="admin-rsvp-dashboard" class="min-h-screen bg-[#f4f6f7] text-[#24313a]">
+  <.admin_header />
+
+  <main class="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+    <section class="mb-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-end">
+      <div>
+        <p class="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#6e94b2]">
+          Guest responses
+        </p>
+        <h1 class="max-w-2xl font-serif text-4xl leading-tight sm:text-5xl">
+          Every reply, all in one place.
+        </h1>
+        <p class="mt-4 max-w-xl text-sm leading-6 text-slate-500 sm:text-base">
+          See who’s joining, who’s bringing a partner, and who can’t make it.
+        </p>
+      </div>
+
+      <div class="rounded-3xl border border-[#c8d9e5] bg-[#edf4f8] p-5">
+        <div class="flex items-start gap-3">
+          <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white text-[#6e94b2] shadow-sm">
+            <.icon name="hero-map" class="size-5" />
+          </span>
+          <div>
+            <p class="text-xs font-bold uppercase tracking-[0.15em] text-[#5f829d]">
+              Seating next
+            </p>
+            <p class="mt-1 text-sm leading-6 text-[#506c82]">
+              Seat assignments can live here once your table plan is ready.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="guest-stats" class="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+          Responses
+        </p>
+        <p id="guest-stat-responses" class="mt-2 font-serif text-3xl">{@stats.responses}</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+          Expected guests
+        </p>
+        <p id="guest-stat-expected" class="mt-2 font-serif text-3xl">{@stats.expected_guests}</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+          Attending parties
+        </p>
+        <p id="guest-stat-attending" class="mt-2 font-serif text-3xl">{@stats.attending}</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Plus ones</p>
+        <p id="guest-stat-plus-ones" class="mt-2 font-serif text-3xl">{@stats.plus_ones}</p>
+      </div>
+    </section>
+
+    <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_24px_70px_-48px_rgba(36,49,58,0.45)]">
+      <div class="flex items-center justify-between border-b border-slate-100 px-5 py-4 sm:px-6">
+        <div>
+          <h2 class="font-serif text-xl">RSVP guest list</h2>
+          <p class="mt-0.5 text-xs text-slate-400">Newest responses appear first</p>
+        </div>
+        <span class="rounded-full bg-[#edf4f8] px-3 py-1 text-xs font-semibold text-[#5f829d]">
+          {@stats.responses} {if @stats.responses == 1, do: "reply", else: "replies"}
+        </span>
+      </div>
+
+      <div
+        :if={@rsvps == []}
+        id="guests-empty"
+        class="grid place-items-center px-5 py-16 text-center"
+      >
+        <span class="mb-4 grid size-14 place-items-center rounded-full bg-[#edf4f8] text-[#6e94b2]">
+          <.icon name="hero-users" class="size-6" />
+        </span>
+        <h3 class="font-serif text-xl">No responses yet.</h3>
+        <p class="mt-2 max-w-sm text-sm leading-6 text-slate-500">
+          Replies from bbtogether.online will appear here automatically.
+        </p>
+      </div>
+
+      <div :if={@rsvps != []} id="guest-list" class="divide-y divide-slate-100">
+        <div class="hidden grid-cols-[minmax(12rem,1fr)_minmax(9rem,0.7fr)_7rem_minmax(9rem,0.7fr)_minmax(9rem,0.75fr)] gap-4 bg-slate-50/80 px-6 py-3 text-[0.62rem] font-bold uppercase tracking-[0.14em] text-slate-400 lg:grid">
+          <span>Guest</span>
+          <span>RSVP</span>
+          <span>Party size</span>
+          <span>Seat</span>
+          <span>Replied</span>
+        </div>
+        <article
+          :for={rsvp <- @rsvps}
+          id={"guest-#{rsvp.id}"}
+          class="grid gap-4 px-5 py-5 transition hover:bg-slate-50/70 sm:px-6 lg:grid-cols-[minmax(12rem,1fr)_minmax(9rem,0.7fr)_7rem_minmax(9rem,0.7fr)_minmax(9rem,0.75fr)] lg:items-center"
+        >
+          <% {response_label, response_class} = rsvp_status(rsvp) %>
+
+          <div class="min-w-0">
+            <p class="truncate font-semibold">{rsvp.name}</p>
+            <p class="mt-1 text-xs text-slate-400">Submitted from the wedding website</p>
+          </div>
+
+          <div>
+            <p class="mb-1 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-slate-400 lg:hidden">
+              RSVP
+            </p>
+            <span class={[
+              "inline-flex rounded-full px-2.5 py-1 text-xs font-semibold",
+              response_class
+            ]}>
+              {response_label}
+            </span>
+          </div>
+
+          <div>
+            <p class="mb-1 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-slate-400 lg:hidden">
+              Party size
+            </p>
+            <p class="text-sm font-semibold">{party_size(rsvp)}</p>
+          </div>
+
+          <div>
+            <p class="mb-1 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-slate-400 lg:hidden">
+              Seat
+            </p>
+            <span
+              :if={rsvp.attending}
+              class="inline-flex items-center gap-1.5 text-xs font-medium text-[#5f829d]"
+            >
+              <span class="size-1.5 rounded-full bg-[#8fa9c2]"></span> Not assigned
+            </span>
+            <span :if={!rsvp.attending} class="text-xs text-slate-300">—</span>
+          </div>
+
+          <div>
+            <p class="mb-1 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-slate-400 lg:hidden">
+              Replied
+            </p>
+            <p class="text-xs text-slate-400">{format_date(rsvp.inserted_at)}</p>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <.admin_footer />
+</div>

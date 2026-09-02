@@ -14,9 +14,25 @@ defmodule NekoWeb.PageControllerTest do
     end
 
     assert document |> LazyHTML.query("#wedding-story-photos [data-photo-slide]") |> Enum.count() ==
-             8
+             16
 
-    assert document |> LazyHTML.query("#wedding-story-photos img") |> Enum.count() == 8
+    assert document |> LazyHTML.query("#wedding-story-photos img") |> Enum.count() == 16
+
+    assert document
+           |> LazyHTML.query(
+             ~s(#wedding-story-photos img[src="/images/bee-boom-under-the-trees.webp"])
+           )
+           |> Enum.count() == 1
+
+    assert document
+           |> LazyHTML.query(
+             ~s(#wedding-story-photos img[src="/images/bee-boom-pine-forest.webp"])
+           )
+           |> Enum.count() == 1
+
+    assert document |> LazyHTML.query("#wedding-story-autoplay") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#wedding-hero[data-wedding-welcome]") |> Enum.count() == 1
+    assert document |> LazyHTML.query("[data-invitation-card]") |> Enum.count() == 1
 
     assert document |> LazyHTML.query("#wedding-music-player") |> Enum.count() == 1
     assert document |> LazyHTML.query("#wedding-music-toggle") |> Enum.count() == 1
@@ -53,6 +69,10 @@ defmodule NekoWeb.PageControllerTest do
     assert document |> LazyHTML.query("[data-schedule-item]") |> Enum.count() == 5
 
     assert document
+           |> LazyHTML.query("#wedding-venue img")
+           |> LazyHTML.attribute("src") == ["/images/misstar-garden-chapel.jpg"]
+
+    assert document
            |> LazyHTML.query("#wedding-countdown")
            |> LazyHTML.attribute("data-countdown") == ["2026-11-01T15:09:00+07:00"]
 
@@ -71,15 +91,46 @@ defmodule NekoWeb.PageControllerTest do
            |> LazyHTML.query(~s(meta[property="og:image"]))
            |> LazyHTML.attribute("content")
            |> List.first()
-           |> String.ends_with?("/images/wedding-meadow.jpg")
+           |> String.ends_with?("/images/bee-boom-og-v2.jpg")
+
+    assert document
+           |> LazyHTML.query(~s(meta[property="og:title"]))
+           |> LazyHTML.attribute("content") == ["Bee & Boom — Our Wedding"]
+
+    assert document |> LazyHTML.query("title") |> LazyHTML.text() |> String.trim() ==
+             "Bee & Boom — Our Wedding"
+
+    assert document
+           |> LazyHTML.query(~s(meta[property="og:image:width"]))
+           |> LazyHTML.attribute("content") == ["1200"]
+
+    assert document
+           |> LazyHTML.query(~s(meta[property="og:image:height"]))
+           |> LazyHTML.attribute("content") == ["630"]
 
     assert document
            |> LazyHTML.query(~s(meta[name="twitter:card"]))
            |> LazyHTML.attribute("content") == ["summary_large_image"]
 
+    assert document
+           |> LazyHTML.query(~s(meta[name="twitter:image"]))
+           |> LazyHTML.attribute("content")
+           |> List.first()
+           |> String.ends_with?("/images/bee-boom-og-v2.jpg")
+
+    assert document
+           |> LazyHTML.query(~s(link[rel="icon"][type="image/svg+xml"]))
+           |> LazyHTML.attribute("href") == ["/images/favicon.svg"]
+
+    assert document
+           |> LazyHTML.query(~s(link[rel="apple-touch-icon"]))
+           |> LazyHTML.attribute("href") == ["/images/apple-touch-icon.png"]
+
     assert document |> LazyHTML.query("#wedding-rsvp-form") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-name") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-attending") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-invite-token") |> Enum.empty?()
+    assert document |> LazyHTML.query("#personalized-invitation-greeting") |> Enum.empty?()
   end
 
   test "POST /rsvp saves an attending guest with a partner", %{conn: conn} do

@@ -6,26 +6,49 @@
     <meta name="csrf-token" content={get_csrf_token()} />
     <meta
       name="description"
-      content="You're invited to the wedding of Passaraporn (Bee) & Pongsatorn (Boom) — Sunday, 1 November 2026 · Misstar Cafe by Davika Wedding Venue, Bangkok · ขอเรียนเชิญร่วมเป็นเกียรติในพิธีมงคลสมรส"
+      content="มาร่วมฉลองไปกับ Bee & Boom วันอาทิตย์ที่ 1 พฤศจิกายน 2569 ณ Misstar Cafe by Davika, Bangkok"
     />
-    <meta property="og:title" content="Bee & Boom — The Wedding" />
+    <link rel="canonical" href={NekoWeb.Endpoint.url()} />
+    <meta property="og:title" content="Bee & Boom — Our Wedding" />
     <meta
       property="og:description"
-      content="Sunday, 1 November 2026 · Misstar Cafe by Davika Wedding Venue, Bangkok"
+      content="มาร่วมฉลองไปกับเรา · วันอาทิตย์ที่ 1 พฤศจิกายน 2569 ณ Misstar Cafe by Davika, Bangkok"
     />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Bee & Boom" />
+    <meta property="og:locale" content="th_TH" />
+    <meta property="og:url" content={NekoWeb.Endpoint.url()} />
     <meta
       property="og:image"
-      content={NekoWeb.Endpoint.url() <> ~p"/images/wedding-meadow.jpg"}
+      content={NekoWeb.Endpoint.url() <> ~p"/images/bee-boom-og-v2.jpg"}
     />
-    <meta property="og:image:width" content="1672" />
-    <meta property="og:image:height" content="941" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="Bee and Boom in a watercolor wedding meadow with their cats"
+      content="Bee and Boom sharing a close embrace, framed by a soft watercolor garden"
     />
     <meta name="twitter:card" content="summary_large_image" />
-    <.live_title default="Bee & Boom" suffix=" · Wedding">
+    <meta name="twitter:title" content="Bee & Boom — Our Wedding" />
+    <meta
+      name="twitter:description"
+      content="มาร่วมฉลองไปกับเรา · วันอาทิตย์ที่ 1 พฤศจิกายน 2569 ณ Misstar Cafe by Davika, Bangkok"
+    />
+    <meta
+      name="twitter:image"
+      content={NekoWeb.Endpoint.url() <> ~p"/images/bee-boom-og-v2.jpg"}
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Bee and Boom sharing a close embrace, framed by a soft watercolor garden"
+    />
+    <meta name="theme-color" content="#f5f1e8" />
+    <meta name="apple-mobile-web-app-title" content="Bee & Boom" />
+    <link rel="icon" href={~p"/images/favicon.svg"} type="image/svg+xml" />
+    <link rel="icon" href={~p"/favicon.ico"} sizes="64x64" />
+    <link rel="apple-touch-icon" href={~p"/images/apple-touch-icon.png"} />
+    <.live_title default="Bee & Boom — Our Wedding">
       {assigns[:page_title]}
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />

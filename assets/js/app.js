@@ -46,6 +46,13 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+// Play the welcome ceremony on every visit
+const welcome = document.querySelector("[data-wedding-welcome]")
+if (welcome) {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  welcome.dataset.welcomeState = reducedMotion ? "seen" : "playing"
+}
+
 // Wedding countdown
 const countdown = document.querySelector("[data-countdown]")
 if (countdown) {
@@ -130,7 +137,13 @@ if (photoStory) {
   const previous = photoStory.querySelector("[data-photo-previous]")
   const next = photoStory.querySelector("[data-photo-next]")
   const current = photoStory.querySelector("[data-photo-current]")
+  const autoplay = photoStory.querySelector("[data-photo-autoplay]")
+  const pauseIcon = photoStory.querySelector(".photo-story-pause")
+  const playIcon = photoStory.querySelector(".photo-story-play")
   let active = 0
+  let autoplayPaused = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  let autoplayTimer
+  let galleryVisible = false
   let frame
 
   const updateGallery = () => {
@@ -155,7 +168,7 @@ if (photoStory) {
     next.disabled = active === slides.length - 1
   }
 
-  const showPhoto = (index) => {
+  const showPhoto = (index, behavior = "smooth") => {
     const boundedIndex = Math.max(0, Math.min(index, slides.length - 1))
     const slide = slides[boundedIndex]
     const left = boundedIndex === 0
@@ -163,7 +176,32 @@ if (photoStory) {
       : boundedIndex === slides.length - 1
         ? rail.scrollWidth - rail.clientWidth
         : slide.offsetLeft - (rail.clientWidth - slide.offsetWidth) / 2
-    rail.scrollTo({left, behavior: "smooth"})
+    rail.scrollTo({left, behavior})
+  }
+
+  const startAutoplay = () => {
+    window.clearInterval(autoplayTimer)
+    if (autoplayPaused || document.hidden || !galleryVisible) return
+    autoplayTimer = window.setInterval(() => {
+      if (active === slides.length - 1) showPhoto(0, "auto")
+      else showPhoto(active + 1)
+    }, 2000)
+  }
+
+  const syncAutoplay = () => {
+    autoplay.setAttribute("aria-pressed", String(autoplayPaused))
+    autoplay.setAttribute(
+      "aria-label",
+      autoplayPaused ? "เล่นภาพอัตโนมัติ" : "หยุดการเลื่อนภาพอัตโนมัติ"
+    )
+    pauseIcon.classList.toggle("hidden", autoplayPaused)
+    playIcon.classList.toggle("hidden", !autoplayPaused)
+    startAutoplay()
+  }
+
+  const navigateTo = (index) => {
+    showPhoto(index)
+    startAutoplay()
   }
 
   rail.addEventListener("scroll", () => {
@@ -173,12 +211,28 @@ if (photoStory) {
   rail.addEventListener("keydown", (event) => {
     if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return
     event.preventDefault()
-    showPhoto(active + (event.key === "ArrowRight" ? 1 : -1))
+    navigateTo(active + (event.key === "ArrowRight" ? 1 : -1))
   })
-  previous.addEventListener("click", () => showPhoto(active - 1))
-  next.addEventListener("click", () => showPhoto(active + 1))
+  previous.addEventListener("click", () => navigateTo(active - 1))
+  next.addEventListener("click", () => navigateTo(active + 1))
+  slides.forEach((slide, index) => slide.addEventListener("click", () => navigateTo(index)))
+  autoplay.addEventListener("click", () => {
+    autoplayPaused = !autoplayPaused
+    syncAutoplay()
+  })
+  if ("IntersectionObserver" in window) {
+    const galleryObserver = new IntersectionObserver(([entry]) => {
+      galleryVisible = entry.intersectionRatio >= 0.35
+      startAutoplay()
+    }, {threshold: [0, 0.35]})
+    galleryObserver.observe(rail)
+  } else {
+    galleryVisible = true
+  }
+  document.addEventListener("visibilitychange", startAutoplay)
   window.addEventListener("resize", updateGallery)
   updateGallery()
+  syncAutoplay()
 }
 
 // Reveal the partner question only for guests who are attending

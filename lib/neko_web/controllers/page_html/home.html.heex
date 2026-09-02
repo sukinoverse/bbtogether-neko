@@ -3,7 +3,11 @@
   class="relative isolate min-h-screen overflow-x-clip bg-[#f5f8fa] text-[#3d4450]"
 >
   <%!-- ===== Hero: save the date ===== --%>
-  <section id="wedding-hero" class="relative flex min-h-svh flex-col overflow-hidden">
+  <section
+    id="wedding-hero"
+    class="relative flex min-h-svh flex-col overflow-hidden"
+    data-wedding-welcome
+  >
     <img
       id="wedding-background"
       src={~p"/images/wedding-meadow.jpg"}
@@ -19,11 +23,14 @@
     </div>
 
     <div class="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
-      <span class="petal-drift left-[9%] top-[19%] bg-[#f5b8c9]"></span>
-      <span class="petal-drift left-[21%] top-[12%] bg-[#f7d7b8] [animation-delay:1.6s]"></span>
-      <span class="petal-drift left-[72%] top-[17%] bg-[#bad9c3] [animation-delay:.9s]"></span>
-      <span class="petal-drift left-[84%] top-[29%] bg-[#efc3d8] [animation-delay:2.4s]"></span>
-      <span class="petal-drift left-[60%] top-[8%] bg-[#c4d8ef] [animation-delay:3.2s]"></span>
+      <span class="welcome-petal left-[9%] top-[19%] bg-[#f5b8c9] [animation-delay:100ms]"></span>
+      <span class="welcome-petal left-[21%] top-[12%] bg-[#f7d7b8] [animation-delay:350ms]">
+      </span>
+      <span class="welcome-petal left-[72%] top-[17%] bg-[#bad9c3] [animation-delay:500ms]">
+      </span>
+      <span class="welcome-petal left-[84%] top-[29%] bg-[#efc3d8] [animation-delay:250ms]">
+      </span>
+      <span class="welcome-petal left-[60%] top-[8%] bg-[#c4d8ef] [animation-delay:700ms]"></span>
     </div>
 
     <div class="relative mx-auto flex w-full max-w-6xl flex-1 flex-col items-center px-5 pt-10 sm:px-9 sm:pt-12">
@@ -183,7 +190,7 @@
   <section
     id="wedding-invitation"
     aria-labelledby="wedding-invitation-title"
-    class="relative overflow-hidden bg-[#f5f8fa] px-5 pt-6 pb-24 sm:px-9"
+    class="relative overflow-hidden bg-[#f5f8fa] px-5 pt-6 pb-24 sm:px-9 lg:min-h-svh lg:pt-14 lg:pb-32"
   >
     <h2 id="wedding-invitation-title" class="sr-only">คำเชิญร่วมพิธีมงคลสมรส</h2>
 
@@ -194,9 +201,9 @@
       <span class="petal-drift right-[14%] top-[18%] bg-[#c4d8ef] [animation-delay:1.9s]"></span>
     </div>
 
-    <div class="relative mx-auto max-w-2xl" data-reveal>
-      <div class="overflow-hidden rounded-t-[10rem] rounded-b-3xl border border-[#d7e1e9] bg-white/80 pb-12 text-center shadow-[0_30px_80px_rgba(85,108,130,0.13)] backdrop-blur-sm sm:rounded-t-[14rem]">
-        <div class="relative px-6 pt-14 sm:px-14">
+    <div class="relative mx-auto max-w-2xl" data-reveal data-invitation-card>
+      <div class="overflow-hidden rounded-t-[10rem] rounded-b-3xl border border-[#d7e1e9] bg-white/80 pb-12 text-center shadow-[0_30px_80px_rgba(85,108,130,0.13)] backdrop-blur-sm sm:rounded-t-[14rem] lg:pb-16">
+        <div class="relative px-6 pt-14 sm:px-14 lg:pt-20">
           <div class="mx-auto flex max-w-xs items-center justify-center gap-4" aria-hidden="true">
             <span class="h-px w-14 bg-gradient-to-r from-transparent to-[#c2d1dd]"></span>
             <span class="grid size-16 shrink-0 place-items-center rounded-full border border-[#d7e1e9] bg-[#fafcfd] shadow-[0_10px_28px_rgba(85,108,130,0.12)]">
@@ -207,7 +214,7 @@
             <span class="h-px w-14 bg-gradient-to-l from-transparent to-[#c2d1dd]"></span>
           </div>
 
-          <div class="mt-8 grid gap-6 text-sm leading-relaxed text-[#5c6a78] sm:grid-cols-[1fr_auto_1fr] sm:gap-8">
+          <div class="mt-8 grid gap-6 text-sm leading-relaxed text-[#5c6a78] sm:grid-cols-[1fr_auto_1fr] sm:gap-8 lg:mt-10">
             <div>
               <p>นายมนัส โตสารเดช (คุณพ่อ)</p>
               <p>นางประภาพร โตสารเดช (คุณแม่)</p>
@@ -219,11 +226,11 @@
             </div>
           </div>
 
-          <p class="mt-8 text-[0.95rem] leading-relaxed text-[#5c6a78]">
+          <p class="mt-8 text-[0.95rem] leading-relaxed text-[#5c6a78] lg:mt-10">
             มีความยินดีขอเรียนเชิญท่านเพื่อเป็นเกียรติ<br />ในพิธีมงคลสมรสระหว่าง
           </p>
 
-          <div class="mt-8 grid items-center gap-1 sm:grid-cols-[1fr_auto_1fr] sm:gap-6">
+          <div class="mt-8 grid items-center gap-1 sm:grid-cols-[1fr_auto_1fr] sm:gap-6 lg:mt-10">
             <div class="sm:text-right">
               <p class="font-wedding-script text-4xl text-[#3d4450] sm:text-5xl">Passaraporn</p>
               <p class="mt-2 text-sm text-[#5c6a78]">นางสาวภัสราภรณ์ โตสารเดช</p>
@@ -241,17 +248,17 @@
             </div>
           </div>
 
-          <div class="mx-auto mt-10 h-px w-40 bg-gradient-to-r from-transparent via-[#c2d1dd] to-transparent">
+          <div class="mx-auto mt-10 h-px w-40 bg-gradient-to-r from-transparent via-[#c2d1dd] to-transparent lg:mt-12">
           </div>
 
-          <p class="mt-8 font-wedding-serif text-xl tracking-[0.06em] text-[#495363]">
+          <p class="mt-8 font-wedding-serif text-xl tracking-[0.06em] text-[#495363] lg:mt-10">
             วันอาทิตย์ที่ ๑ พฤศจิกายน ๒๕๖๙
           </p>
           <p class="mt-3 flex items-center justify-center gap-2 text-sm text-[#5c6a78]">
             <.icon name="hero-map-pin" class="size-4 text-[#e8a7b9]" />
             Misstar Cafe by Davika Wedding Venue, Bangkok
           </p>
-          <p class="mt-7 text-xs leading-relaxed text-[#66737f]">
+          <p class="mt-7 text-xs leading-relaxed text-[#66737f] lg:mt-9">
             ขออภัยหากมิได้มาเรียนเชิญด้วยตนเอง
           </p>
         </div>
@@ -475,6 +482,178 @@
             </figcaption>
           </div>
         </figure>
+
+        <figure class="photo-story-slide" data-photo-slide data-active="false">
+          <div class="photo-story-frame">
+            <img
+              src={~p"/images/bee-boom-warm-light.webp"}
+              alt="บีและบูมนั่งเคียงกันในแสงอุ่น พร้อมช่อดอกยิปโซ"
+              width="1200"
+              height="1800"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+            <div class="photo-story-shade" aria-hidden="true"></div>
+            <figcaption class="photo-story-caption">
+              <span class="photo-story-number">09</span>
+              <p class="font-wedding-script text-4xl leading-none sm:text-5xl">Warm light</p>
+              <p class="mt-2 text-xs tracking-[0.24em] text-white/65 uppercase">
+                ความสุขในวันธรรมดา
+              </p>
+            </figcaption>
+          </div>
+        </figure>
+
+        <figure class="photo-story-slide" data-photo-slide data-active="false">
+          <div class="photo-story-frame">
+            <img
+              src={~p"/images/bee-boom-playful-day.webp"}
+              alt="บีและบูมจับมือโพสท่าสนุกระหว่างทริปด้วยกัน"
+              width="1348"
+              height="1800"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+            <div class="photo-story-shade" aria-hidden="true"></div>
+            <figcaption class="photo-story-caption">
+              <span class="photo-story-number">10</span>
+              <p class="font-wedding-script text-4xl leading-none sm:text-5xl">Playful days</p>
+              <p class="mt-2 text-xs tracking-[0.24em] text-white/65 uppercase">
+                หัวเราะไปด้วยกัน
+              </p>
+            </figcaption>
+          </div>
+        </figure>
+
+        <figure class="photo-story-slide" data-photo-slide data-active="false">
+          <div class="photo-story-frame">
+            <img
+              src={~p"/images/bee-boom-magic-trip.webp"}
+              alt="บีและบูมถ่ายเซลฟี่หน้าปราสาทระหว่างทริป"
+              width="1348"
+              height="1800"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+            <div class="photo-story-shade" aria-hidden="true"></div>
+            <figcaption class="photo-story-caption">
+              <span class="photo-story-number">11</span>
+              <p class="font-wedding-script text-4xl leading-none sm:text-5xl">A little magic</p>
+              <p class="mt-2 text-xs tracking-[0.24em] text-white/65 uppercase">
+                เรื่องมหัศจรรย์ของเรา
+              </p>
+            </figcaption>
+          </div>
+        </figure>
+
+        <figure class="photo-story-slide" data-photo-slide data-active="false">
+          <div class="photo-story-frame">
+            <img
+              src={~p"/images/bee-boom-sky-mirror.webp"}
+              alt="บีและบูมถ่ายภาพคู่ผ่านกระจกโค้งใต้ท้องฟ้าสีฟ้า"
+              width="1440"
+              height="1800"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+            <div class="photo-story-shade" aria-hidden="true"></div>
+            <figcaption class="photo-story-caption">
+              <span class="photo-story-number">12</span>
+              <p class="font-wedding-script text-4xl leading-none sm:text-5xl">
+                Blue-sky reflections
+              </p>
+              <p class="mt-2 text-xs tracking-[0.24em] text-white/65 uppercase">
+                เราในทุกมุมมอง
+              </p>
+            </figcaption>
+          </div>
+        </figure>
+
+        <figure class="photo-story-slide" data-photo-slide data-active="false">
+          <div class="photo-story-frame">
+            <img
+              src={~p"/images/bee-boom-lanna-memory.webp"}
+              alt="บีและบูมในชุดพื้นเมือง ถือร่มในลานวัดเก่า"
+              width="1170"
+              height="1557"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+            <div class="photo-story-shade" aria-hidden="true"></div>
+            <figcaption class="photo-story-caption">
+              <span class="photo-story-number">13</span>
+              <p class="font-wedding-script text-4xl leading-none sm:text-5xl">Rooted in us</p>
+              <p class="mt-2 text-xs tracking-[0.24em] text-white/65 uppercase">
+                งดงามในแบบของเรา
+              </p>
+            </figcaption>
+          </div>
+        </figure>
+
+        <figure class="photo-story-slide" data-photo-slide data-active="false">
+          <div class="photo-story-frame">
+            <img
+              src={~p"/images/bee-boom-under-the-trees.webp"}
+              alt="บีและบูมยืนยิ้มใต้ต้นไม้ใหญ่ พร้อมช่อดอกไม้และผ้าคลุมลูกไม้"
+              width="1350"
+              height="1800"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+            <div class="photo-story-shade" aria-hidden="true"></div>
+            <figcaption class="photo-story-caption">
+              <span class="photo-story-number">14</span>
+              <p class="font-wedding-script text-4xl leading-none sm:text-5xl">Under the trees</p>
+              <p class="mt-2 text-xs tracking-[0.24em] text-white/65 uppercase">
+                เติบโตเคียงข้างกัน
+              </p>
+            </figcaption>
+          </div>
+        </figure>
+
+        <figure class="photo-story-slide" data-photo-slide data-active="false">
+          <div class="photo-story-frame">
+            <img
+              src={~p"/images/bee-boom-pine-bench.webp"}
+              alt="บีและบูมนั่งเคียงกันบนม้านั่งท่ามกลางป่าสน"
+              width="1800"
+              height="1200"
+              loading="lazy"
+              class="h-full w-full object-cover object-center"
+            />
+            <div class="photo-story-shade" aria-hidden="true"></div>
+            <figcaption class="photo-story-caption">
+              <span class="photo-story-number">15</span>
+              <p class="font-wedding-script text-4xl leading-none sm:text-5xl">Among the pines</p>
+              <p class="mt-2 text-xs tracking-[0.24em] text-white/65 uppercase">
+                เรื่องราวกลางป่าสน
+              </p>
+            </figcaption>
+          </div>
+        </figure>
+
+        <figure class="photo-story-slide" data-photo-slide data-active="false">
+          <div class="photo-story-frame">
+            <img
+              src={~p"/images/bee-boom-pine-forest.webp"}
+              alt="บีและบูมนั่งยิ้มเคียงกันใต้ต้นสนในแสงอ่อน"
+              width="1800"
+              height="1200"
+              loading="lazy"
+              class="h-full w-full object-cover object-center"
+            />
+            <div class="photo-story-shade" aria-hidden="true"></div>
+            <figcaption class="photo-story-caption">
+              <span class="photo-story-number">16</span>
+              <p class="font-wedding-script text-4xl leading-none sm:text-5xl">
+                Still choosing you
+              </p>
+              <p class="mt-2 text-xs tracking-[0.24em] text-white/65 uppercase">
+                วันนี้ก็ยังเลือกเธอ
+              </p>
+            </figcaption>
+          </div>
+        </figure>
       </div>
 
       <div class="mx-auto mt-6 flex max-w-6xl items-center justify-between px-5 text-xs text-white/55 sm:px-9">
@@ -482,9 +661,25 @@
           <.icon name="hero-arrows-right-left" class="size-4" /> เลื่อนเพื่อชมภาพ
         </p>
         <p class="hidden tracking-[0.22em] uppercase sm:block">Scroll to wander</p>
-        <p class="font-wedding-serif text-base tracking-[0.18em] text-white/80" aria-live="polite">
-          <span data-photo-current>01</span><span class="mx-2 text-white/30">/</span>08
-        </p>
+        <div class="flex items-center gap-3">
+          <button
+            id="wedding-story-autoplay"
+            type="button"
+            data-photo-autoplay
+            aria-label="หยุดการเลื่อนภาพอัตโนมัติ"
+            aria-pressed="false"
+            class="grid size-9 place-items-center rounded-full border border-white/15 bg-white/5 text-white/75 transition duration-300 hover:border-white/35 hover:bg-white/12 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+          >
+            <.icon name="hero-pause-solid" class="photo-story-pause size-3.5" />
+            <.icon name="hero-play-solid" class="photo-story-play hidden size-3.5" />
+          </button>
+          <p
+            class="font-wedding-serif text-base tracking-[0.18em] text-white/80"
+            aria-live="polite"
+          >
+            <span data-photo-current>01</span><span class="mx-2 text-white/30">/</span>16
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -555,33 +750,57 @@
   <%!-- ===== Venue ===== --%>
   <section
     id="wedding-venue"
+    aria-labelledby="wedding-venue-title"
     class="relative overflow-hidden bg-gradient-to-b from-[#eaf2f8] to-[#f5f8fa] px-5 py-20 sm:px-9 sm:py-28"
   >
     <span class="cloud-blob left-[-4rem] bottom-16 size-56" aria-hidden="true"></span>
 
     <div
-      class="relative mx-auto max-w-xl overflow-hidden rounded-[2.5rem] border border-white/70 shadow-[0_30px_80px_rgba(95,137,152,0.22)]"
+      class="group relative mx-auto max-w-5xl overflow-hidden rounded-[2.5rem] border border-white/80 bg-white/75 shadow-[0_30px_90px_rgba(95,137,152,0.2)] md:grid md:grid-cols-[1.15fr_0.85fr]"
       data-reveal
     >
-      <img
-        src={~p"/images/meadow-sky.jpg"}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        class="absolute inset-0 h-full w-full object-cover"
-      />
-      <div class="absolute inset-0 bg-white/35"></div>
-      <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/60 to-transparent">
-      </div>
+      <figure class="relative min-h-80 overflow-hidden sm:min-h-[26rem] md:min-h-[34rem]">
+        <img
+          src={~p"/images/misstar-garden-chapel.jpg"}
+          alt="โบสถ์สีขาวท่ามกลางสวนของ Misstar Cafe by Davika Wedding Venue"
+          width="960"
+          height="640"
+          loading="lazy"
+          class="absolute inset-0 h-full w-full object-cover transition duration-1000 ease-out group-hover:scale-[1.025]"
+        />
+        <div
+          class="absolute inset-0 bg-gradient-to-t from-[#1f2d2b]/65 via-transparent to-transparent"
+          aria-hidden="true"
+        >
+        </div>
+        <figcaption class="absolute right-7 bottom-7 left-7 text-white sm:right-10 sm:bottom-9 sm:left-10">
+          <p class="text-[0.65rem] font-medium tracking-[0.38em] text-white/75 uppercase">
+            The garden chapel
+          </p>
+          <p class="mt-2 font-wedding-script text-4xl leading-none sm:text-5xl">
+            Where forever begins
+          </p>
+        </figcaption>
+      </figure>
 
-      <div class="relative px-8 py-14 text-center sm:py-16">
+      <div class="relative flex flex-col items-center justify-center px-8 py-14 text-center sm:px-12 sm:py-16 md:px-10">
         <div class="float-gentle mx-auto grid size-14 place-items-center rounded-full border border-white/70 bg-white/85 text-[#7aa58d] shadow-[0_16px_40px_rgba(85,108,130,0.18)] backdrop-blur-sm">
           <.icon name="hero-map-pin" class="size-6" />
         </div>
         <p class="mt-6 text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#4f7584]">
           Venue
         </p>
-        <h2 class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl">สถานที่จัดงาน</h2>
+        <h2
+          id="wedding-venue-title"
+          class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl"
+        >
+          สถานที่จัดงาน
+        </h2>
+        <span
+          class="mt-6 h-px w-24 bg-gradient-to-r from-transparent via-[#a7bdc7] to-transparent"
+          aria-hidden="true"
+        >
+        </span>
         <p class="mt-6 font-wedding-serif text-xl text-[#495363]">
           Misstar Cafe by Davika Wedding Venue
         </p>
@@ -621,7 +840,7 @@
           id="wedding-rsvp-title"
           class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl"
         >
-          มาฉลองด้วยกันไหม
+          มาร่วมฉลองไปกับเรา
         </h2>
         <p class="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-[#617080]">
           บอกเราได้เลย แล้วเราจะเตรียมทุกอย่างไว้ต้อนรับคุณ
@@ -690,7 +909,13 @@
               <span class="absolute inset-2 rounded-full border border-white/90"></span>
               <.icon name="hero-check" class="relative size-8" />
             </span>
-            <p class="mt-7 text-[0.62rem] font-semibold uppercase tracking-[0.38em] text-[#64806b]">
+            <p
+              id="rsvp-response-recorded"
+              class="mt-6 inline-flex items-center gap-1.5 rounded-full border border-[#bad0c4]/70 bg-[#edf5f0] px-3 py-1.5 text-[0.65rem] font-semibold tracking-[0.08em] text-[#64806b]"
+            >
+              <.icon name="hero-check-circle" class="size-3.5" /> เราได้รับคำตอบของคุณแล้ว
+            </p>
+            <p class="mt-4 text-[0.62rem] font-semibold uppercase tracking-[0.38em] text-[#64806b]">
               {if(@rsvp_status == "declined", do: "Thank you", else: "You’re all set")}
             </p>
             <h3 class="mt-3 font-wedding-serif text-3xl text-[#3d4450]">
@@ -877,32 +1102,29 @@
   >
     <span class="cloud-blob right-[-4rem] top-10 size-48" aria-hidden="true"></span>
 
-    <div class="relative mx-auto max-w-xl text-center" data-reveal>
+    <div class="relative mx-auto max-w-2xl text-center" data-reveal>
       <p class="text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#617080]">
         Dress in our colors
       </p>
       <h2 class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl">สีธีมงาน</h2>
       <p class="mt-2 font-wedding-serif text-lg italic text-[#5d6d7a]">
-        เลือกโทนพาสเทลที่คุณชอบ <span class="text-[#506c82]">· Dusty Blue เป็นสีหลัก</span>
+        เลือกโทนพาสเทลที่คุณชอบ
+        <span class="ml-1 inline-flex items-center gap-1.5 rounded-full bg-[#8fa9c2]/15 px-2.5 py-1 text-sm not-italic text-[#506c82]">
+          <span class="size-1.5 rounded-full bg-[#8fa9c2]"></span> Dusty Blue เป็นสีหลัก
+        </span>
       </p>
       <div
-        class="mt-9 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
+        class="mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4"
         role="img"
-        aria-label="Wedding palette: Dusty Blue, Sage, Blush, Lilac, and Butter Yellow"
+        aria-label="Wedding palette led by Dusty Blue, followed by Powder Blue, Teal, Sage, Lilac, Peach, Blush, Orchid, and Butter Yellow"
       >
         <span
           :for={{color, i} <- Enum.with_index(@theme_colors)}
           aria-hidden="true"
-          class={[
-            "float-gentle grid place-items-center rounded-full shadow-[0_10px_24px_rgba(85,108,130,0.14)] ring-white transition-transform duration-300 hover:-translate-y-1.5",
-            if(i == 0, do: "size-14 ring-2 sm:size-16", else: "size-12 ring-1 sm:size-14")
-          ]}
+          class="float-gentle grid size-12 place-items-center rounded-full shadow-[0_10px_24px_rgba(85,108,130,0.14)] ring-1 ring-white transition-transform duration-300 hover:-translate-y-1.5 sm:size-14"
           style={"background-color:#{color}33;color:#{color};animation-delay:#{i * 0.45}s"}
         >
-          <.icon
-            name="hero-heart-solid"
-            class={[if(i == 0, do: "size-6 sm:size-7", else: "size-5 sm:size-6")]}
-          />
+          <.icon name="hero-heart-solid" class="size-5 sm:size-6" />
         </span>
       </div>
     </div>

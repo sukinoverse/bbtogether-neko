@@ -147,6 +147,34 @@ html {
   animation: petal-drift 9s ease-in-out infinite;
 }
 
+.welcome-petal {
+  position: absolute;
+  width: .85rem;
+  height: .52rem;
+  border-radius: 999px 999px 999px 0;
+  opacity: 0;
+}
+
+#wedding-hero[data-welcome-state="playing"] .welcome-petal {
+  animation: welcome-petal-fall 2.4s cubic-bezier(.2, .65, .3, 1) both;
+}
+
+#wedding-hero[data-welcome-state="seen"] .reveal {
+  animation: none;
+}
+
+.reveal-ready [data-invitation-card] {
+  transform: translateY(36px) scaleY(.96);
+  transform-origin: top center;
+  filter: blur(2px);
+  transition: opacity 900ms cubic-bezier(.2, .65, .3, 1), transform 1100ms cubic-bezier(.2, .72, .2, 1), filter 900ms ease;
+}
+
+.reveal-ready [data-invitation-card].is-visible {
+  transform: none;
+  filter: none;
+}
+
 .float-gentle {
   animation: float-gentle 7s ease-in-out infinite;
 }
@@ -269,6 +297,10 @@ html {
 .photo-story-slide[data-active="true"] {
   opacity: 1;
   transform: scale(1);
+}
+
+.photo-story-slide:not([data-active="true"]) {
+  cursor: pointer;
 }
 
 .photo-story-frame {
@@ -396,6 +428,22 @@ html {
   }
 }
 
+@keyframes welcome-petal-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(-10px, -28px, 0) rotate(-24deg) scale(.8);
+  }
+
+  18% {
+    opacity: .72;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(32px, 120px, 0) rotate(150deg) scale(1);
+  }
+}
+
 @keyframes float-gentle {
   0%, 100% {
     transform: translateY(0);
@@ -431,6 +479,7 @@ html {
 
   .reveal,
   .petal-drift,
+  .welcome-petal,
   .float-gentle {
     animation: none;
   }

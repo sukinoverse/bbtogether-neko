@@ -14,11 +14,22 @@ defmodule NekoWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :admin do
+    plug NekoWeb.Plugs.AdminBasicAuth
+  end
+
   scope "/", NekoWeb do
     pipe_through :browser
 
     get "/", PageController, :home
     post "/rsvp", PageController, :rsvp
+  end
+
+  scope "/admin", NekoWeb.Admin do
+    pipe_through [:browser, :admin]
+
+    get "/", RsvpController, :index
+    get "/guests", RsvpController, :index
   end
 
   # Other scopes may use custom stacks.

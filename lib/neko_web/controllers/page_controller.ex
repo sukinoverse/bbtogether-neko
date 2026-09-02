@@ -10,15 +10,8 @@ defmodule NekoWeb.PageController do
   def rsvp(conn, %{"rsvp" => params}) do
     case %Rsvp{} |> Rsvp.changeset(params) |> Repo.insert() do
       {:ok, rsvp} ->
-        status =
-          cond do
-            !rsvp.attending -> "declined"
-            rsvp.bringing_partner -> "attending_with_partner"
-            true -> "attending"
-          end
-
         conn
-        |> put_flash(:rsvp_status, status)
+        |> put_flash(:rsvp_status, rsvp_status(rsvp))
         |> redirect(to: ~p"/#wedding-rsvp")
 
       {:error, changeset} ->
@@ -33,6 +26,10 @@ defmodule NekoWeb.PageController do
     |> put_status(:unprocessable_entity)
     |> render_home(Rsvp.changeset(%Rsvp{}, %{}))
   end
+
+  defp rsvp_status(%Rsvp{attending: false}), do: "declined"
+  defp rsvp_status(%Rsvp{bringing_partner: true}), do: "attending_with_partner"
+  defp rsvp_status(%Rsvp{}), do: "attending"
 
   defp render_home(conn, rsvp_changeset) do
     events = [
@@ -73,10 +70,10 @@ defmodule NekoWeb.PageController do
       }
     ]
 
-    theme_colors = ~w(#8fa9c2 #63a092 #8fae83 #c3bfe0 #f2c3a6 #f0aebf #d5a8de #f3d56f #a9cbe8)
+    theme_colors = ~w(#8fa9c2 #a9cbe8 #63a092 #8fae83 #c3bfe0 #f2c3a6 #f0aebf #d5a8de #f3d56f)
 
     render(conn, :home,
-      page_title: "งานแต่งงาน Bee & Boom",
+      page_title: "Bee & Boom — Our Wedding",
       events: events,
       theme_colors: theme_colors,
       rsvp_form: Phoenix.Component.to_form(rsvp_changeset),

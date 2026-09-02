@@ -11,6 +11,11 @@ config :neko,
   ecto_repos: [Neko.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
 
+config :neko, :admin_basic_auth,
+  username: "admin",
+  password: "admin",
+  realm: "Bee and Boom Admin"
+
 # Configure the endpoint
 config :neko, NekoWeb.Endpoint,
   url: [host: "localhost"],

@@ -23,6 +23,19 @@ end
 config :neko, NekoWeb.Endpoint, http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
 if config_env() == :prod do
+  admin_username =
+    System.get_env("ADMIN_USERNAME") ||
+      raise "environment variable ADMIN_USERNAME is missing"
+
+  admin_password =
+    System.get_env("ADMIN_PASSWORD") ||
+      raise "environment variable ADMIN_PASSWORD is missing"
+
+  config :neko, :admin_basic_auth,
+    username: admin_username,
+    password: admin_password,
+    realm: "Bee and Boom Admin"
+
   database_url =
     System.get_env("DATABASE_URL") ||
       raise """

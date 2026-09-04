@@ -135,6 +135,7 @@ defmodule NekoWeb.PageControllerTest do
     assert document |> LazyHTML.query("#rsvp-phone") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-attending") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-party-size") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-panel") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-lookup-form") |> Enum.count() == 1
 
     assert document

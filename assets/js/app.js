@@ -235,21 +235,61 @@ if (photoStory) {
   syncAutoplay()
 }
 
-// Reveal the party-size question only for guests who are attending
-const rsvpAttendance = document.querySelector("#rsvp-attending")
-const rsvpPartySizeField = document.querySelector("#rsvp-party-size-field")
-const rsvpPartySize = document.querySelector("#rsvp-party-size")
-if (rsvpAttendance && rsvpPartySizeField && rsvpPartySize) {
-  const syncPartySizeField = () => {
-    const attending = rsvpAttendance.value === "true"
-    rsvpPartySizeField.classList.toggle("is-visible", attending)
-    rsvpPartySizeField.setAttribute("aria-hidden", String(!attending))
-    rsvpPartySize.disabled = !attending
-  }
+// Enhance RSVP forms without losing the current scroll, music, or gallery state
+const syncPartySizeField = () => {
+  const attendance = document.querySelector("#rsvp-attending")
+  const field = document.querySelector("#rsvp-party-size-field")
+  const partySize = document.querySelector("#rsvp-party-size")
+  if (!attendance || !field || !partySize) return
 
-  rsvpAttendance.addEventListener("change", syncPartySizeField)
-  syncPartySizeField()
+  const attending = attendance.value === "true"
+  field.classList.toggle("is-visible", attending)
+  field.setAttribute("aria-hidden", String(!attending))
+  partySize.disabled = !attending
 }
+
+document.addEventListener("change", (event) => {
+  if (event.target.matches("#rsvp-attending")) syncPartySizeField()
+})
+syncPartySizeField()
+
+const rsvpFormIds = new Set(["wedding-rsvp-form", "rsvp-lookup-form", "rsvp-reset-form"])
+document.addEventListener("submit", async (event) => {
+  const form = event.target
+  if (!(form instanceof HTMLFormElement) || !rsvpFormIds.has(form.id)) return
+
+  event.preventDefault()
+  const submitter = event.submitter || form.querySelector('[type="submit"]')
+  form.setAttribute("aria-busy", "true")
+  if (submitter) submitter.disabled = true
+
+  try {
+    const response = await fetch(form.action, {
+      method: form.method,
+      body: new FormData(form),
+      credentials: "same-origin",
+    })
+    const documentCopy = new DOMParser().parseFromString(await response.text(), "text/html")
+    const currentPanel = document.querySelector("#rsvp-panel")
+    const nextPanel = documentCopy.querySelector("#rsvp-panel")
+    if (!currentPanel || !nextPanel) throw new Error("RSVP panel missing from response")
+
+    const scrollPosition = {left: window.scrollX, top: window.scrollY}
+    currentPanel.replaceWith(nextPanel)
+    syncPartySizeField()
+
+    const focusTarget = nextPanel.querySelector(
+      '#rsvp-success, #rsvp-lookup-error, [aria-invalid="true"]'
+    )
+    if (focusTarget) {
+      if (!focusTarget.matches("input, select, button, a")) focusTarget.tabIndex = -1
+      focusTarget.focus({preventScroll: true})
+    }
+    window.scrollTo({...scrollPosition, behavior: "instant"})
+  } catch (_error) {
+    HTMLFormElement.prototype.submit.call(form)
+  }
+})
 
 // The lines below enable quality of life phoenix_live_reload
 // development features:

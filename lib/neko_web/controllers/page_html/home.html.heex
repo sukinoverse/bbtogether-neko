@@ -1203,10 +1203,13 @@
           </div>
         </div>
 
-        <div class={[
-          "px-6 py-9 sm:px-10 sm:py-11",
-          @rsvp_response && "sm:px-12 sm:py-12"
-        ]}>
+        <div
+          id="rsvp-panel"
+          class={[
+            "px-6 py-9 sm:px-10 sm:py-11",
+            @rsvp_response && "sm:px-12 sm:py-12"
+          ]}
+        >
           <div
             :if={@rsvp_response}
             id="rsvp-success"
@@ -1432,7 +1435,7 @@
                   <button
                     id="rsvp-lookup-submit"
                     type="submit"
-                    class="h-12 shrink-0 rounded-full border border-[#9bb6a8] px-6 text-sm font-medium text-[#5f806d] transition hover:-translate-y-0.5 hover:bg-[#edf5f0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4f7584] focus-visible:ring-offset-2"
+                    class="h-12 shrink-0 rounded-full border border-[#9bb6a8] px-6 text-sm font-medium text-[#5f806d] transition hover:-translate-y-0.5 hover:bg-[#edf5f0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4f7584] focus-visible:ring-offset-2 sm:mb-3"
                   >
                     เช็กคำตอบ
                   </button>

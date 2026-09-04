@@ -12,20 +12,34 @@ defmodule NekoWeb.Admin.RsvpControllerTest do
 
   test "GET /admin shows free-form guest responses and seating state", %{conn: conn} do
     attending =
-      Repo.insert!(%Rsvp{name: "Beam", attending: true, bringing_partner: true})
+      Repo.insert!(%Rsvp{
+        name: "Beam",
+        phone: "0812345678",
+        attending: true,
+        party_size: 4
+      })
 
     declined =
-      Repo.insert!(%Rsvp{name: "Mint", attending: false, bringing_partner: false})
+      Repo.insert!(%Rsvp{
+        name: "Mint",
+        phone: "0898765432",
+        attending: false,
+        party_size: 0
+      })
 
     conn = conn |> authenticate() |> get(~p"/admin")
     document = conn |> html_response(200) |> LazyHTML.from_document()
 
     assert document |> LazyHTML.query("#admin-rsvp-dashboard") |> Enum.count() == 1
     assert document |> LazyHTML.query("#guest-stat-responses") |> LazyHTML.text() =~ "2"
-    assert document |> LazyHTML.query("#guest-stat-expected") |> LazyHTML.text() =~ "2"
+    assert document |> LazyHTML.query("#guest-stat-expected") |> LazyHTML.text() =~ "4"
+    assert document |> LazyHTML.query("#guest-stat-additional") |> LazyHTML.text() =~ "3"
 
     assert document |> LazyHTML.query("#guest-#{attending.id}") |> LazyHTML.text() =~
-             "Attending +1"
+             "Attending"
+
+    assert document |> LazyHTML.query("#guest-#{attending.id}") |> LazyHTML.text() =~
+             "0812345678"
 
     assert document |> LazyHTML.query("#guest-#{attending.id}") |> LazyHTML.text() =~
              "Not assigned"

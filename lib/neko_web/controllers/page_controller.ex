@@ -11,7 +11,7 @@ defmodule NekoWeb.PageController do
     case %Rsvp{} |> Rsvp.changeset(params) |> Repo.insert() do
       {:ok, rsvp} ->
         conn
-        |> put_flash(:rsvp_status, rsvp_status(rsvp))
+        |> put_session(:rsvp_id, rsvp.id)
         |> redirect(to: ~p"/#wedding-rsvp")
 
       {:error, changeset} ->
@@ -27,11 +27,38 @@ defmodule NekoWeb.PageController do
     |> render_home(Rsvp.changeset(%Rsvp{}, %{}))
   end
 
-  defp rsvp_status(%Rsvp{attending: false}), do: "declined"
-  defp rsvp_status(%Rsvp{bringing_partner: true}), do: "attending_with_partner"
-  defp rsvp_status(%Rsvp{}), do: "attending"
+  def check_rsvp(conn, %{"lookup" => %{"phone" => phone}}) do
+    case Repo.get_by(Rsvp, phone: Rsvp.normalize_phone(phone)) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> render_home(Rsvp.changeset(%Rsvp{}, %{}),
+          lookup_phone: phone,
+          lookup_error: "ยังไม่พบคำตอบจากเบอร์นี้ ลองตรวจสอบอีกครั้งนะ"
+        )
 
-  defp render_home(conn, rsvp_changeset) do
+      rsvp ->
+        conn
+        |> put_session(:rsvp_id, rsvp.id)
+        |> redirect(to: ~p"/#wedding-rsvp")
+    end
+  end
+
+  def check_rsvp(conn, _params) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> render_home(Rsvp.changeset(%Rsvp{}, %{}),
+      lookup_error: "กรุณากรอกเบอร์โทรศัพท์"
+    )
+  end
+
+  def reset_rsvp(conn, _params) do
+    conn
+    |> delete_session(:rsvp_id)
+    |> redirect(to: ~p"/#wedding-rsvp")
+  end
+
+  defp render_home(conn, rsvp_changeset, opts \\ []) do
     events = [
       %{
         time: "15.09",
@@ -72,13 +99,26 @@ defmodule NekoWeb.PageController do
 
     theme_colors = ~w(#8fa9c2 #a9cbe8 #63a092 #8fae83 #c3bfe0 #f2c3a6 #f0aebf #d5a8de #f3d56f)
 
+    rsvp_response =
+      case get_session(conn, :rsvp_id) do
+        nil -> nil
+        id -> Repo.get(Rsvp, id)
+      end
+
     render(conn, :home,
       page_title: "Bee & Boom — Our Wedding",
       events: events,
       theme_colors: theme_colors,
+      party_size_options: Enum.map(1..10, &{"#{&1} ท่าน", &1}),
       rsvp_form: Phoenix.Component.to_form(rsvp_changeset),
-      show_partner?: Ecto.Changeset.get_field(rsvp_changeset, :attending) == true,
-      rsvp_status: Phoenix.Flash.get(conn.assigns.flash, :rsvp_status)
+      lookup_form:
+        Phoenix.Component.to_form(%{"phone" => Keyword.get(opts, :lookup_phone, "")},
+          as: :lookup
+        ),
+      reset_form: Phoenix.Component.to_form(%{}, as: :reset),
+      lookup_error: Keyword.get(opts, :lookup_error),
+      show_party_size?: Ecto.Changeset.get_field(rsvp_changeset, :attending) == true,
+      rsvp_response: rsvp_response
     )
   end
 end

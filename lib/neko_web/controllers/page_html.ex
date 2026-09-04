@@ -7,4 +7,7 @@ defmodule NekoWeb.PageHTML do
   use NekoWeb, :html
 
   embed_templates "page_html/*"
+
+  def masked_phone(nil), do: "—"
+  def masked_phone(phone), do: "••• ••• #{String.slice(phone, -4, 4)}"
 end

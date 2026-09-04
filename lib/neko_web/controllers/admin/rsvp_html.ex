@@ -44,14 +44,9 @@ defmodule NekoWeb.Admin.RsvpHTML do
   end
 
   def rsvp_status(%{attending: false}), do: {"Not attending", "bg-rose-50 text-rose-700"}
-
-  def rsvp_status(%{bringing_partner: true}),
-    do: {"Attending +1", "bg-emerald-50 text-emerald-700"}
-
   def rsvp_status(_rsvp), do: {"Attending", "bg-emerald-50 text-emerald-700"}
 
-  def party_size(%{attending: true, bringing_partner: true}), do: 2
-  def party_size(%{attending: true}), do: 1
+  def party_size(%{attending: true, party_size: party_size}), do: party_size
   def party_size(_rsvp), do: 0
 
   def format_date(datetime), do: Calendar.strftime(datetime, "%d %b %Y · %H:%M")

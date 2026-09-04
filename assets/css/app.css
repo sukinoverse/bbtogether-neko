@@ -335,7 +335,7 @@ html {
   color: rgb(255 255 255 / .55);
 }
 
-.rsvp-partner-field {
+.rsvp-party-size-field {
   display: grid;
   grid-template-rows: 0fr;
   margin-top: -1.5rem;
@@ -344,28 +344,10 @@ html {
     margin-top 350ms cubic-bezier(.2, .65, .3, 1), opacity 250ms ease;
 }
 
-.rsvp-partner-field.is-visible {
+.rsvp-party-size-field.is-visible {
   grid-template-rows: 1fr;
   margin-top: 1.5rem;
   opacity: 1;
-}
-
-.rsvp-checkbox {
-  appearance: none;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: .8rem;
-  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
-}
-
-.rsvp-checkbox:checked {
-  border-color: #6f9b83;
-  background-color: #6f9b83;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m3 8 3 3 7-7' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-
-.rsvp-checkbox:active {
-  transform: scale(.92);
 }
 
 /* Schedule timeline spine */
@@ -489,7 +471,7 @@ html {
     animation: none;
   }
 
-  .rsvp-partner-field {
+  .rsvp-party-size-field {
     transition: none;
   }
 

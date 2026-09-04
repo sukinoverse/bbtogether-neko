@@ -235,21 +235,20 @@ if (photoStory) {
   syncAutoplay()
 }
 
-// Reveal the partner question only for guests who are attending
+// Reveal the party-size question only for guests who are attending
 const rsvpAttendance = document.querySelector("#rsvp-attending")
-const rsvpPartnerField = document.querySelector("#rsvp-partner-field")
-const rsvpPartner = document.querySelector("#rsvp-bringing-partner")
-if (rsvpAttendance && rsvpPartnerField && rsvpPartner) {
-  const syncPartnerField = () => {
+const rsvpPartySizeField = document.querySelector("#rsvp-party-size-field")
+const rsvpPartySize = document.querySelector("#rsvp-party-size")
+if (rsvpAttendance && rsvpPartySizeField && rsvpPartySize) {
+  const syncPartySizeField = () => {
     const attending = rsvpAttendance.value === "true"
-    rsvpPartnerField.classList.toggle("is-visible", attending)
-    rsvpPartnerField.setAttribute("aria-hidden", String(!attending))
-    rsvpPartner.disabled = !attending
-    if (!attending) rsvpPartner.checked = false
+    rsvpPartySizeField.classList.toggle("is-visible", attending)
+    rsvpPartySizeField.setAttribute("aria-hidden", String(!attending))
+    rsvpPartySize.disabled = !attending
   }
 
-  rsvpAttendance.addEventListener("change", syncPartnerField)
-  syncPartnerField()
+  rsvpAttendance.addEventListener("change", syncPartySizeField)
+  syncPartySizeField()
 }
 
 // The lines below enable quality of life phoenix_live_reload

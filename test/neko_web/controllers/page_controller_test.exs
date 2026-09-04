@@ -128,68 +128,108 @@ defmodule NekoWeb.PageControllerTest do
 
     assert document |> LazyHTML.query("#wedding-rsvp-form") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-name") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-phone") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-attending") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-party-size") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-lookup-form") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-invite-token") |> Enum.empty?()
     assert document |> LazyHTML.query("#personalized-invitation-greeting") |> Enum.empty?()
   end
 
-  test "POST /rsvp saves an attending guest with a partner", %{conn: conn} do
+  test "POST /rsvp saves the total party size and shows a detailed confirmation", %{conn: conn} do
     conn =
       post(conn, ~p"/rsvp", %{
         "rsvp" => %{
           "name" => "  สมชาย ใจดี  ",
+          "phone" => "+66 81 234 5678",
           "attending" => "true",
-          "bringing_partner" => "true"
+          "party_size" => "5"
         }
       })
 
     assert redirected_to(conn) == "/#wedding-rsvp"
-    assert Phoenix.Flash.get(conn.assigns.flash, :rsvp_status) == "attending_with_partner"
-    refute Phoenix.Flash.get(conn.assigns.flash, :info)
 
-    assert %Rsvp{name: "สมชาย ใจดี", attending: true, bringing_partner: true} =
-             Repo.one(Rsvp)
+    assert %Rsvp{
+             name: "สมชาย ใจดี",
+             phone: "0812345678",
+             attending: true,
+             party_size: 5
+           } = rsvp = Repo.one(Rsvp)
+
+    assert get_session(conn, :rsvp_id) == rsvp.id
+
+    document = conn |> recycle() |> get(~p"/") |> html_response(200) |> LazyHTML.from_document()
+
+    assert document |> LazyHTML.query("#rsvp-success") |> LazyHTML.text() =~ "รวม 5 ท่าน"
+    assert document |> LazyHTML.query("#rsvp-success") |> LazyHTML.text() =~ "••• ••• 5678"
+    assert document |> LazyHTML.query("#wedding-rsvp-form") |> Enum.empty?()
   end
 
-  test "GET / replaces the form with the matching RSVP confirmation" do
-    for {status, message} <- [
-          {"attending", "1 ท่าน"},
-          {"attending_with_partner", "รวม 2 ท่าน"},
-          {"declined", "หวังว่าจะได้เจอกันในโอกาสหน้า"}
-        ] do
-      conn =
-        build_conn()
-        |> init_test_session(%{})
-        |> Phoenix.Controller.fetch_flash([])
-        |> Phoenix.Controller.put_flash(:rsvp_status, status)
-        |> get(~p"/")
-
-      document = conn |> html_response(200) |> LazyHTML.from_document()
-
-      assert document |> LazyHTML.query("#rsvp-success") |> Enum.count() == 1
-      assert document |> LazyHTML.query("#rsvp-success") |> LazyHTML.text() =~ message
-      assert document |> LazyHTML.query("#wedding-rsvp-form") |> Enum.empty?()
-    end
-  end
-
-  test "POST /rsvp clears the partner answer when the guest cannot attend", %{conn: conn} do
+  test "POST /rsvp clears party size when the guest cannot attend", %{conn: conn} do
     conn =
       post(conn, ~p"/rsvp", %{
         "rsvp" => %{
           "name" => "สมหญิง ใจดี",
+          "phone" => "089-123-4567",
           "attending" => "false",
-          "bringing_partner" => "true"
+          "party_size" => "8"
         }
       })
 
     assert redirected_to(conn) == "/#wedding-rsvp"
-    assert Phoenix.Flash.get(conn.assigns.flash, :rsvp_status) == "declined"
+    assert %Rsvp{attending: false, party_size: 0} = Repo.one(Rsvp)
+  end
 
-    assert %Rsvp{attending: false, bringing_partner: false} = Repo.one(Rsvp)
+  test "POST /rsvp/check retrieves a response by normalized phone number", %{conn: conn} do
+    rsvp =
+      Repo.insert!(%Rsvp{
+        name: "Beam",
+        phone: "0812345678",
+        attending: true,
+        party_size: 3
+      })
+
+    conn = post(conn, ~p"/rsvp/check", %{"lookup" => %{"phone" => "+66 81 234 5678"}})
+
+    assert redirected_to(conn) == "/#wedding-rsvp"
+    assert get_session(conn, :rsvp_id) == rsvp.id
+  end
+
+  test "POST /rsvp/check keeps the lookup open when no response is found", %{conn: conn} do
+    document =
+      conn
+      |> post(~p"/rsvp/check", %{"lookup" => %{"phone" => "0800000000"}})
+      |> html_response(404)
+      |> LazyHTML.from_document()
+
+    assert document |> LazyHTML.query("#rsvp-lookup[open]") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-lookup-error") |> Enum.count() == 1
+  end
+
+  test "POST /rsvp rejects a duplicate phone number", %{conn: conn} do
+    Repo.insert!(%Rsvp{
+      name: "Beam",
+      phone: "0812345678",
+      attending: true,
+      party_size: 2
+    })
+
+    conn =
+      post(conn, ~p"/rsvp", %{
+        "rsvp" => %{
+          "name" => "Another Beam",
+          "phone" => "081-234-5678",
+          "attending" => "true",
+          "party_size" => "4"
+        }
+      })
+
+    assert html_response(conn, 422) =~ "เบอร์นี้ส่งคำตอบแล้ว"
+    assert Repo.aggregate(Rsvp, :count) == 1
   end
 
   test "POST /rsvp returns the form with errors when required answers are missing", %{conn: conn} do
-    conn = post(conn, ~p"/rsvp", %{"rsvp" => %{"name" => ""}})
+    conn = post(conn, ~p"/rsvp", %{"rsvp" => %{"name" => "", "phone" => "bad"}})
 
     assert html_response(conn, 422) =~ "wedding-rsvp-form"
     assert Repo.aggregate(Rsvp, :count) == 0

@@ -11,7 +11,7 @@
           Every reply, all in one place.
         </h1>
         <p class="mt-4 max-w-xl text-sm leading-6 text-slate-500 sm:text-base">
-          See who’s joining, who’s bringing a partner, and who can’t make it.
+          See who’s joining, their total party size, and who can’t make it.
         </p>
       </div>
 
@@ -52,8 +52,12 @@
         <p id="guest-stat-attending" class="mt-2 font-serif text-3xl">{@stats.attending}</p>
       </div>
       <div class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
-        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Plus ones</p>
-        <p id="guest-stat-plus-ones" class="mt-2 font-serif text-3xl">{@stats.plus_ones}</p>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+          Additional guests
+        </p>
+        <p id="guest-stat-additional" class="mt-2 font-serif text-3xl">
+          {@stats.additional_guests}
+        </p>
       </div>
     </section>
 
@@ -99,7 +103,9 @@
 
           <div class="min-w-0">
             <p class="truncate font-semibold">{rsvp.name}</p>
-            <p class="mt-1 text-xs text-slate-400">Submitted from the wedding website</p>
+            <p class="mt-1 text-xs text-slate-400">
+              {rsvp.phone || "Legacy response · no phone"}
+            </p>
           </div>
 
           <div>

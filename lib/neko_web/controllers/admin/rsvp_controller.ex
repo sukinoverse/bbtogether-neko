@@ -15,8 +15,8 @@ defmodule NekoWeb.Admin.RsvpController do
       stats: %{
         responses: length(rsvps),
         attending: length(attending),
-        plus_ones: Enum.count(attending, & &1.bringing_partner),
-        expected_guests: Enum.sum(Enum.map(attending, &if(&1.bringing_partner, do: 2, else: 1)))
+        additional_guests: Enum.sum(Enum.map(attending, &max(&1.party_size - 1, 0))),
+        expected_guests: Enum.sum(Enum.map(attending, & &1.party_size))
       }
     )
   end

@@ -14,9 +14,9 @@ defmodule NekoWeb.PageControllerTest do
     end
 
     assert document |> LazyHTML.query("#wedding-story-photos [data-photo-slide]") |> Enum.count() ==
-             16
+             31
 
-    assert document |> LazyHTML.query("#wedding-story-photos img") |> Enum.count() == 16
+    assert document |> LazyHTML.query("#wedding-story-photos img") |> Enum.count() == 31
 
     assert document
            |> LazyHTML.query(
@@ -28,6 +28,10 @@ defmodule NekoWeb.PageControllerTest do
            |> LazyHTML.query(
              ~s(#wedding-story-photos img[src="/images/bee-boom-pine-forest.webp"])
            )
+           |> Enum.count() == 1
+
+    assert document
+           |> LazyHTML.query(~s(#wedding-story-photos img[src="/images/bee-boom-shore-run.webp"]))
            |> Enum.count() == 1
 
     assert document |> LazyHTML.query("#wedding-story-autoplay") |> Enum.count() == 1
@@ -132,6 +136,11 @@ defmodule NekoWeb.PageControllerTest do
     assert document |> LazyHTML.query("#rsvp-attending") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-party-size") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-lookup-form") |> Enum.count() == 1
+
+    assert document
+           |> LazyHTML.query("#rsvp-lookup-form")
+           |> LazyHTML.attribute("action") == ["/rsvp/check#wedding-rsvp"]
+
     assert document |> LazyHTML.query("#rsvp-invite-token") |> Enum.empty?()
     assert document |> LazyHTML.query("#personalized-invitation-greeting") |> Enum.empty?()
   end

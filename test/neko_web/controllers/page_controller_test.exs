@@ -98,6 +98,10 @@ defmodule NekoWeb.PageControllerTest do
            |> String.ends_with?("/images/bee-boom-og-v2.jpg")
 
     assert document
+           |> LazyHTML.query(~s(meta[name="robots"]))
+           |> LazyHTML.attribute("content") == ["noindex, nofollow"]
+
+    assert document
            |> LazyHTML.query(~s(meta[property="og:title"]))
            |> LazyHTML.attribute("content") == ["Bee & Boom — Our Wedding"]
 
@@ -172,6 +176,10 @@ defmodule NekoWeb.PageControllerTest do
 
     assert document |> LazyHTML.query("#rsvp-success") |> LazyHTML.text() =~ "รวม 5 ท่าน"
     assert document |> LazyHTML.query("#rsvp-success") |> LazyHTML.text() =~ "••• ••• 5678"
+
+    assert document |> LazyHTML.query("#rsvp-reset") |> LazyHTML.text() |> String.trim() ==
+             "เช็กคำตอบของเบอร์อื่น"
+
     assert document |> LazyHTML.query("#wedding-rsvp-form") |> Enum.empty?()
   end
 

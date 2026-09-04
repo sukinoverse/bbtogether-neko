@@ -253,6 +253,32 @@ html {
   display: block;
 }
 
+@media (max-width: 639px) {
+  .music-player {
+    right: max(.75rem, env(safe-area-inset-right));
+    bottom: max(.75rem, env(safe-area-inset-bottom));
+  }
+
+  .music-player-control {
+    width: 3rem;
+    height: 3rem;
+    min-width: 0;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+  }
+
+  .music-player-copy,
+  .music-player-disc {
+    display: none;
+  }
+
+  .music-player-action {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}
+
 .cloud-blob {
   position: absolute;
   border-radius: 9999px;

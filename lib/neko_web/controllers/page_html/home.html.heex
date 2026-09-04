@@ -167,7 +167,7 @@
       <span class="music-player-disc" aria-hidden="true">
         <.icon name="hero-musical-note" class="size-4" />
       </span>
-      <span class="min-w-0 flex-1 text-left">
+      <span class="music-player-copy min-w-0 flex-1 text-left">
         <span class="block text-[0.58rem] font-semibold tracking-[0.3em] text-[#6b7a87] uppercase">
           Our song
         </span>
@@ -989,7 +989,7 @@
             data-photo-autoplay
             aria-label="หยุดการเลื่อนภาพอัตโนมัติ"
             aria-pressed="false"
-            class="grid size-9 place-items-center rounded-full border border-white/15 bg-white/5 text-white/75 transition duration-300 hover:border-white/35 hover:bg-white/12 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            class="grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-white/75 transition duration-300 hover:border-white/35 hover:bg-white/12 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             <.icon name="hero-pause-solid" class="photo-story-pause size-3.5" />
             <.icon name="hero-play-solid" class="photo-story-play hidden size-3.5" />
@@ -1301,7 +1301,7 @@
                 type="submit"
                 class="mt-5 text-xs font-medium text-[#6f8798] underline decoration-[#b8c9d4] underline-offset-4 transition hover:text-[#3d4450]"
               >
-                เช็กเบอร์อื่นหรือส่งคำตอบใหม่
+                เช็กคำตอบของเบอร์อื่น
               </button>
             </.form>
           </div>
@@ -1404,7 +1404,7 @@
               open={@lookup_error != nil}
               class="group mt-7 border-t border-[#dbe4e9] pt-5"
             >
-              <summary class="flex cursor-pointer list-none items-center justify-center gap-2 text-sm font-medium text-[#617080] transition hover:text-[#3d4450]">
+              <summary class="flex min-h-11 cursor-pointer list-none items-center justify-center gap-2 py-2 text-sm font-medium text-[#617080] transition hover:text-[#3d4450]">
                 <.icon name="hero-magnifying-glass" class="size-4" /> เคยตอบแล้ว? เช็กคำตอบของคุณ
                 <.icon
                   name="hero-chevron-down"

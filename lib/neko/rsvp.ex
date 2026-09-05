@@ -21,7 +21,7 @@ defmodule Neko.Rsvp do
     |> validate_length(:name, max: 120, message: "ชื่อต้องไม่เกิน 120 ตัวอักษร")
     |> validate_format(:phone, ~r/^\d{9,10}$/, message: "กรุณากรอกเบอร์โทรศัพท์ 9–10 หลัก")
     |> validate_party_size()
-    |> unique_constraint(:phone, message: "เบอร์นี้ส่งคำตอบแล้ว ลองเช็กคำตอบด้านล่าง")
+    |> unique_constraint(:phone, message: "เบอร์นี้ส่งคำตอบแล้ว หากต้องการเช็กคำตอบ ติดต่อบีหรือบูมได้เลยนะ")
   end
 
   def normalize_phone(phone) when is_binary(phone) do

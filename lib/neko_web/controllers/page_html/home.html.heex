@@ -1290,20 +1290,6 @@
             <p class="mt-5 font-wedding-serif text-sm tracking-[0.16em] text-[#6b7783]">
               Bee &amp; Boom · 01.11.2026
             </p>
-            <.form
-              for={@reset_form}
-              id="rsvp-reset-form"
-              action={~p"/rsvp/reset"}
-              method="post"
-            >
-              <button
-                id="rsvp-reset"
-                type="submit"
-                class="mt-5 text-xs font-medium text-[#6f8798] underline decoration-[#b8c9d4] underline-offset-4 transition hover:text-[#3d4450]"
-              >
-                เช็กคำตอบของเบอร์อื่น
-              </button>
-            </.form>
           </div>
 
           <div :if={!@rsvp_response}>
@@ -1342,7 +1328,7 @@
                   error_class="border-[#d78fa5] ring-4 ring-[#d78fa5]/10"
                 />
                 <p class="px-1 text-[0.7rem] leading-5 text-[#84919c]">
-                  ใช้สำหรับกลับมาเช็กคำตอบของคุณภายหลัง
+                  ใช้สำหรับติดต่อเกี่ยวกับการมาร่วมงาน
                 </p>
               </div>
 
@@ -1398,59 +1384,14 @@
                 <.icon name="hero-lock-closed" class="size-3.5" /> เราใช้ข้อมูลนี้เพื่อเตรียมต้อนรับคุณเท่านั้น
               </p>
             </.form>
-
-            <details
-              id="rsvp-lookup"
-              open={@lookup_error != nil}
-              class="group mt-7 border-t border-[#dbe4e9] pt-5"
-            >
-              <summary class="flex min-h-11 cursor-pointer list-none items-center justify-center gap-2 py-2 text-sm font-medium text-[#617080] transition hover:text-[#3d4450]">
-                <.icon name="hero-magnifying-glass" class="size-4" /> เคยตอบแล้ว? เช็กคำตอบของคุณ
-                <.icon
-                  name="hero-chevron-down"
-                  class="size-3.5 transition-transform duration-200 group-open:rotate-180"
-                />
-              </summary>
-              <.form
-                for={@lookup_form}
-                id="rsvp-lookup-form"
-                action={~p"/rsvp/check#wedding-rsvp"}
-                method="post"
-                class="mt-5"
-              >
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
-                  <div class="min-w-0 flex-1">
-                    <.input
-                      field={@lookup_form[:phone]}
-                      id="rsvp-lookup-phone"
-                      type="tel"
-                      label="เบอร์โทรศัพท์ที่ใช้ตอบรับ"
-                      autocomplete="tel"
-                      inputmode="tel"
-                      required
-                      placeholder="08x xxx xxxx"
-                      class="mt-2 h-12 w-full rounded-2xl border border-[#cbd9e3] bg-white/85 px-4 text-[0.95rem] text-[#3d4450] shadow-sm outline-none transition placeholder:text-[#9aa7b2] focus:border-[#7aa58d] focus:ring-4 focus:ring-[#7aa58d]/12"
-                    />
-                  </div>
-                  <button
-                    id="rsvp-lookup-submit"
-                    type="submit"
-                    class="h-12 shrink-0 rounded-full border border-[#9bb6a8] px-6 text-sm font-medium text-[#5f806d] transition hover:-translate-y-0.5 hover:bg-[#edf5f0] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4f7584] focus-visible:ring-offset-2 sm:mb-3"
-                  >
-                    เช็กคำตอบ
-                  </button>
-                </div>
-                <p
-                  :if={@lookup_error}
-                  id="rsvp-lookup-error"
-                  role="alert"
-                  class="mt-3 text-center text-xs text-[#b76f84]"
-                >
-                  {@lookup_error}
-                </p>
-              </.form>
-            </details>
           </div>
+
+          <p
+            id="rsvp-contact-note"
+            class="mt-7 border-t border-[#dbe4e9] pt-5 text-center text-sm leading-7 text-[#617080]"
+          >
+            หากต้องการเช็กคำตอบ ติดต่อบีหรือบูมได้เลยนะ
+          </p>
         </div>
       </div>
     </div>

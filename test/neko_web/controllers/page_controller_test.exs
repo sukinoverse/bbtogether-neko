@@ -140,11 +140,11 @@ defmodule NekoWeb.PageControllerTest do
     assert document |> LazyHTML.query("#rsvp-attending") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-party-size") |> Enum.count() == 1
     assert document |> LazyHTML.query("#rsvp-panel") |> Enum.count() == 1
-    assert document |> LazyHTML.query("#rsvp-lookup-form") |> Enum.count() == 1
+    assert document |> LazyHTML.query("#rsvp-lookup-form") |> Enum.empty?()
 
     assert document
-           |> LazyHTML.query("#rsvp-lookup-form")
-           |> LazyHTML.attribute("action") == ["/rsvp/check#wedding-rsvp"]
+           |> LazyHTML.query("#rsvp-contact-note")
+           |> LazyHTML.text() =~ "หากต้องการเช็กคำตอบ ติดต่อบีหรือบูมได้เลยนะ"
 
     assert document |> LazyHTML.query("#rsvp-invite-token") |> Enum.empty?()
     assert document |> LazyHTML.query("#personalized-invitation-greeting") |> Enum.empty?()
@@ -177,8 +177,11 @@ defmodule NekoWeb.PageControllerTest do
     assert document |> LazyHTML.query("#rsvp-success") |> LazyHTML.text() =~ "รวม 5 ท่าน"
     assert document |> LazyHTML.query("#rsvp-success") |> LazyHTML.text() =~ "••• ••• 5678"
 
-    assert document |> LazyHTML.query("#rsvp-reset") |> LazyHTML.text() |> String.trim() ==
-             "เช็กคำตอบของเบอร์อื่น"
+    assert document |> LazyHTML.query("#rsvp-reset") |> Enum.empty?()
+
+    assert document
+           |> LazyHTML.query("#rsvp-contact-note")
+           |> LazyHTML.text() =~ "ติดต่อบีหรือบูม"
 
     assert document |> LazyHTML.query("#wedding-rsvp-form") |> Enum.empty?()
   end
@@ -198,30 +201,17 @@ defmodule NekoWeb.PageControllerTest do
     assert %Rsvp{attending: false, party_size: 0} = Repo.one(Rsvp)
   end
 
-  test "POST /rsvp/check retrieves a response by normalized phone number", %{conn: conn} do
-    rsvp =
-      Repo.insert!(%Rsvp{
-        name: "Beam",
-        phone: "0812345678",
-        attending: true,
-        party_size: 3
-      })
+  test "removed phone lookup returns 404 even for a registered phone", %{conn: conn} do
+    Repo.insert!(%Rsvp{
+      name: "Beam",
+      phone: "0812345678",
+      attending: true,
+      party_size: 3
+    })
 
-    conn = post(conn, ~p"/rsvp/check", %{"lookup" => %{"phone" => "+66 81 234 5678"}})
+    conn = post(conn, "/rsvp/check", %{"lookup" => %{"phone" => "+66 81 234 5678"}})
 
-    assert redirected_to(conn) == "/#wedding-rsvp"
-    assert get_session(conn, :rsvp_id) == rsvp.id
-  end
-
-  test "POST /rsvp/check keeps the lookup open when no response is found", %{conn: conn} do
-    document =
-      conn
-      |> post(~p"/rsvp/check", %{"lookup" => %{"phone" => "0800000000"}})
-      |> html_response(404)
-      |> LazyHTML.from_document()
-
-    assert document |> LazyHTML.query("#rsvp-lookup[open]") |> Enum.count() == 1
-    assert document |> LazyHTML.query("#rsvp-lookup-error") |> Enum.count() == 1
+    assert response(conn, 404)
   end
 
   test "POST /rsvp rejects a duplicate phone number", %{conn: conn} do
@@ -242,7 +232,13 @@ defmodule NekoWeb.PageControllerTest do
         }
       })
 
-    assert html_response(conn, 422) =~ "เบอร์นี้ส่งคำตอบแล้ว"
+    document = conn |> html_response(422) |> LazyHTML.from_document()
+
+    assert document |> LazyHTML.query("#wedding-rsvp-form") |> LazyHTML.text() =~
+             "เบอร์นี้ส่งคำตอบแล้ว หากต้องการเช็กคำตอบ ติดต่อบีหรือบูมได้เลยนะ"
+
+    assert document |> LazyHTML.query("#rsvp-success") |> Enum.empty?()
+    refute get_session(conn, :rsvp_id)
     assert Repo.aggregate(Rsvp, :count) == 1
   end
 

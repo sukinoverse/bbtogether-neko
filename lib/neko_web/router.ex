@@ -23,8 +23,6 @@ defmodule NekoWeb.Router do
 
     get "/", PageController, :home
     post "/rsvp", PageController, :rsvp
-    post "/rsvp/check", PageController, :check_rsvp
-    post "/rsvp/reset", PageController, :reset_rsvp
   end
 
   scope "/admin", NekoWeb.Admin do

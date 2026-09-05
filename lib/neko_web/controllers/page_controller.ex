@@ -27,38 +27,7 @@ defmodule NekoWeb.PageController do
     |> render_home(Rsvp.changeset(%Rsvp{}, %{}))
   end
 
-  def check_rsvp(conn, %{"lookup" => %{"phone" => phone}}) do
-    case Repo.get_by(Rsvp, phone: Rsvp.normalize_phone(phone)) do
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> render_home(Rsvp.changeset(%Rsvp{}, %{}),
-          lookup_phone: phone,
-          lookup_error: "ยังไม่พบคำตอบจากเบอร์นี้ ลองตรวจสอบอีกครั้งนะ"
-        )
-
-      rsvp ->
-        conn
-        |> put_session(:rsvp_id, rsvp.id)
-        |> redirect(to: ~p"/#wedding-rsvp")
-    end
-  end
-
-  def check_rsvp(conn, _params) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> render_home(Rsvp.changeset(%Rsvp{}, %{}),
-      lookup_error: "กรุณากรอกเบอร์โทรศัพท์"
-    )
-  end
-
-  def reset_rsvp(conn, _params) do
-    conn
-    |> delete_session(:rsvp_id)
-    |> redirect(to: ~p"/#wedding-rsvp")
-  end
-
-  defp render_home(conn, rsvp_changeset, opts \\ []) do
+  defp render_home(conn, rsvp_changeset) do
     events = [
       %{
         time: "15.09",
@@ -111,12 +80,6 @@ defmodule NekoWeb.PageController do
       theme_colors: theme_colors,
       party_size_options: Enum.map(1..10, &{"#{&1} ท่าน", &1}),
       rsvp_form: Phoenix.Component.to_form(rsvp_changeset),
-      lookup_form:
-        Phoenix.Component.to_form(%{"phone" => Keyword.get(opts, :lookup_phone, "")},
-          as: :lookup
-        ),
-      reset_form: Phoenix.Component.to_form(%{}, as: :reset),
-      lookup_error: Keyword.get(opts, :lookup_error),
       show_party_size?: Ecto.Changeset.get_field(rsvp_changeset, :attending) == true,
       rsvp_response: rsvp_response
     )

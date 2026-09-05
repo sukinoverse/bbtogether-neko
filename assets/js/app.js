@@ -235,7 +235,7 @@ if (photoStory) {
   syncAutoplay()
 }
 
-// Enhance RSVP forms without losing the current scroll, music, or gallery state
+// Enhance the RSVP form without losing the current scroll, music, or gallery state
 const syncPartySizeField = () => {
   const attendance = document.querySelector("#rsvp-attending")
   const field = document.querySelector("#rsvp-party-size-field")
@@ -253,10 +253,9 @@ document.addEventListener("change", (event) => {
 })
 syncPartySizeField()
 
-const rsvpFormIds = new Set(["wedding-rsvp-form", "rsvp-lookup-form", "rsvp-reset-form"])
 document.addEventListener("submit", async (event) => {
   const form = event.target
-  if (!(form instanceof HTMLFormElement) || !rsvpFormIds.has(form.id)) return
+  if (!(form instanceof HTMLFormElement) || form.id !== "wedding-rsvp-form") return
 
   event.preventDefault()
   const submitter = event.submitter || form.querySelector('[type="submit"]')
@@ -279,7 +278,7 @@ document.addEventListener("submit", async (event) => {
     syncPartySizeField()
 
     const focusTarget = nextPanel.querySelector(
-      '#rsvp-success, #rsvp-lookup-error, [aria-invalid="true"]'
+      '#rsvp-success, [aria-invalid="true"]'
     )
     if (focusTarget) {
       if (!focusTarget.matches("input, select, button, a")) focusTarget.tabIndex = -1

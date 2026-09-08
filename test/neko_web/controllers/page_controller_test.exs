@@ -95,7 +95,7 @@ defmodule NekoWeb.PageControllerTest do
            |> LazyHTML.query(~s(meta[property="og:image"]))
            |> LazyHTML.attribute("content")
            |> List.first()
-           |> String.ends_with?("/images/bee-boom-og-v2.jpg")
+           |> String.ends_with?("/images/bee-boom-og-v3.jpg")
 
     assert document
            |> LazyHTML.query(~s(meta[name="robots"]))
@@ -124,7 +124,7 @@ defmodule NekoWeb.PageControllerTest do
            |> LazyHTML.query(~s(meta[name="twitter:image"]))
            |> LazyHTML.attribute("content")
            |> List.first()
-           |> String.ends_with?("/images/bee-boom-og-v2.jpg")
+           |> String.ends_with?("/images/bee-boom-og-v3.jpg")
 
     assert document
            |> LazyHTML.query(~s(link[rel="icon"][type="image/svg+xml"]))

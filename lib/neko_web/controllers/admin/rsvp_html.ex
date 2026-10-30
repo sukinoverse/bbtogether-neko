@@ -23,7 +23,7 @@ defmodule NekoWeb.Admin.RsvpHTML do
           id="view-wedding-site"
           href={~p"/"}
           target="_blank"
-          class="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 px-3 py-2 text-sm text-slate-200 transition hover:border-[#a9cbe8]/60 hover:bg-white/5 hover:text-white sm:px-4"
+          class="inline-flex min-h-11 min-w-11 justify-center shrink-0 items-center gap-2 rounded-full border border-white/15 px-3 py-2 text-sm text-slate-200 transition hover:border-[#a9cbe8]/60 hover:bg-white/5 hover:text-white sm:px-4"
         >
           <span class="hidden sm:inline">View wedding site</span>
           <span class="sr-only sm:hidden">View wedding site</span>
@@ -36,7 +36,7 @@ defmodule NekoWeb.Admin.RsvpHTML do
 
   def admin_footer(assigns) do
     ~H"""
-    <footer class="mx-auto flex max-w-7xl items-center justify-between px-5 pb-8 text-xs text-slate-400 sm:px-8 lg:px-10">
+    <footer class="mx-auto flex flex-wrap gap-3 max-w-7xl items-center justify-between px-5 pb-8 text-xs text-slate-400 sm:px-8 lg:px-10">
       <span>Bee &amp; Boom · 1 November 2026</span>
       <span>Private wedding desk</span>
     </footer>

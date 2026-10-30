@@ -15,21 +15,25 @@
         </p>
       </div>
 
-      <div class="rounded-3xl border border-[#c8d9e5] bg-[#edf4f8] p-5">
+      <a
+        id="open-seating-studio"
+        href={~p"/admin/seating"}
+        class="rounded-3xl border border-[#c8d9e5] bg-[#edf4f8] p-5 transition hover:bg-white"
+      >
         <div class="flex items-start gap-3">
           <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white text-[#6e94b2] shadow-sm">
             <.icon name="hero-map" class="size-5" />
           </span>
           <div>
             <p class="text-xs font-bold uppercase tracking-[0.15em] text-[#5f829d]">
-              Seating next
+              Seating studio
             </p>
             <p class="mt-1 text-sm leading-6 text-[#506c82]">
-              Seat assignments can live here once your table plan is ready.
+              Plan your venue, organize guest groups, and give everyone a place.
             </p>
           </div>
         </div>
-      </div>
+      </a>
     </section>
 
     <section id="guest-stats" class="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -135,7 +139,8 @@
               :if={rsvp.attending}
               class="inline-flex items-center gap-1.5 text-xs font-medium text-[#5f829d]"
             >
-              <span class="size-1.5 rounded-full bg-[#8fa9c2]"></span> Not assigned
+              <span class="size-1.5 rounded-full bg-[#8fa9c2]"></span>
+              Choose a seat within your group
             </span>
             <span :if={!rsvp.attending} class="text-xs text-slate-300">—</span>
           </div>

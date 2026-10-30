@@ -19,6 +19,16 @@
 
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
+import {initSeatingGuide} from "./seating_guide"
+
+initSeatingGuide(document.querySelector("[data-seating-guide]"))
+
+// Keep the editor heading visible after the page's web fonts settle.
+window.addEventListener("load", () => {
+  const editor = document.querySelector("#table-editor:target, #group-editor:target")
+  if (editor) document.fonts.ready.then(() => editor.scrollIntoView({block: "start", behavior: "instant"}))
+}, {once: true})
+
 // Establish Phoenix Socket and LiveView configuration.
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"

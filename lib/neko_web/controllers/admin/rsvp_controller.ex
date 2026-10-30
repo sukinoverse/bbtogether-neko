@@ -6,7 +6,12 @@ defmodule NekoWeb.Admin.RsvpController do
   alias Neko.{Repo, Rsvp}
 
   def index(conn, _params) do
-    rsvps = Repo.all(from rsvp in Rsvp, order_by: [desc: rsvp.inserted_at, desc: rsvp.id])
+    rsvps =
+      Repo.all(
+        from rsvp in Rsvp,
+          order_by: [desc: rsvp.inserted_at, desc: rsvp.id]
+      )
+
     attending = Enum.filter(rsvps, & &1.attending)
 
     render(conn, :index,

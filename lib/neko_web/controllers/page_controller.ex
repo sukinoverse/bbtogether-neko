@@ -74,8 +74,13 @@ defmodule NekoWeb.PageController do
         id -> Repo.get(Rsvp, id)
       end
 
+    seating_public = Neko.Seating.public_enabled?()
+
     render(conn, :home,
       page_title: "Bee & Boom — Our Wedding",
+      seating_public: seating_public,
+      seating_tables: if(seating_public, do: Neko.Seating.tables(), else: []),
+      seating_groups: if(seating_public, do: Neko.Seating.groups(), else: []),
       events: events,
       theme_colors: theme_colors,
       party_size_options: Enum.map(1..10, &{"#{&1} ท่าน", &1}),

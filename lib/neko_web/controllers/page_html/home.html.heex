@@ -133,6 +133,17 @@
         </a>
       </div>
 
+      <nav
+        id="wedding-quick-links"
+        class="wedding-quick-links"
+        aria-label="ข้อมูลวันงาน"
+      >
+        <a href="#wedding-venue"><.icon name="hero-map-pin" class="size-4" />สถานที่</a>
+        <a :if={@seating_public} id="find-seating" href="#wedding-seating">
+          <.icon name="hero-squares-2x2" class="size-4" />ดูผังโต๊ะ
+        </a>
+        <a href="#wedding-rsvp"><.icon name="hero-envelope" class="size-4" />ตอบรับ</a>
+      </nav>
       <div class="reveal pb-8 text-[#8a95a1] [animation-delay:640ms]" aria-hidden="true">
         <.icon name="hero-chevron-down" class="size-5 float-gentle" />
       </div>
@@ -1397,78 +1408,123 @@
     </div>
   </section>
 
-  <%!-- ===== Seating plan ===== --%>
+  <%!-- ===== Seating guide ===== --%>
   <section
+    :if={@seating_public}
     id="wedding-seating"
     aria-labelledby="wedding-seating-title"
-    class="relative overflow-hidden bg-[#f5f8fa] px-5 py-20 sm:px-9 sm:py-28"
+    class="public-seating seating-guide"
   >
-    <div aria-hidden="true">
-      <span class="cloud-blob right-[-5rem] top-16 size-60"></span>
-      <span class="petal-drift left-[10%] top-[28%] bg-[#bad9c3]"></span>
-      <span class="petal-drift right-[12%] bottom-[20%] bg-[#c4d8ef] [animation-delay:1.7s]">
-      </span>
-    </div>
-
-    <div class="relative mx-auto max-w-3xl text-center" data-reveal>
-      <p class="text-[0.68rem] font-medium uppercase tracking-[0.5em] text-[#617080]">
-        Find your place
-      </p>
-      <h2
-        id="wedding-seating-title"
-        class="mt-3 font-wedding-serif text-3xl text-[#3d4450] sm:text-4xl"
-      >
-        ที่นั่งของคุณ
-      </h2>
-      <p class="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-[#617080]">
-        ใกล้วันงาน กลับมาค้นหาโต๊ะและที่นั่งของคุณได้ที่นี่
-      </p>
-
-      <div class="mt-10 overflow-hidden rounded-[2.5rem] border border-white/80 bg-white/65 text-left shadow-[0_30px_80px_rgba(85,108,130,0.14)] backdrop-blur-sm sm:grid sm:grid-cols-[1.1fr_0.9fr]">
-        <div
-          class="border-b border-[#d7e1e9]/80 bg-gradient-to-br from-[#eaf2f8]/80 to-[#edf4ec]/80 p-8 sm:border-r sm:border-b-0 sm:p-10"
-          aria-hidden="true"
-        >
-          <div class="relative mx-auto max-w-xs py-2">
-            <span class="absolute -left-3 top-10 size-24 rounded-full bg-[#f5dce4]/50 blur-xl">
-            </span>
-            <span class="absolute -right-3 bottom-6 size-28 rounded-full bg-[#dcebe3]/70 blur-xl">
-            </span>
-
-            <div class="relative overflow-hidden rounded-t-[9rem] rounded-b-[2rem] border border-white/90 bg-white/65 px-6 pt-10 pb-8 text-center shadow-[0_20px_50px_rgba(85,108,130,0.12)]">
-              <span class="mx-auto grid size-12 place-items-center rounded-full border border-[#d7e1e9] bg-white/80 text-[#7aa58d] shadow-sm">
-                <.icon name="hero-user-group" class="size-5" />
-              </span>
-              <p class="mt-6 text-[0.6rem] font-medium tracking-[0.38em] text-[#617080] uppercase">
-                Your place with us
-              </p>
-              <p class="mt-3 font-wedding-script text-4xl text-[#3d4450]">
-                Bee <span class="text-[#9fb89f]">&amp;</span> Boom
-              </p>
-              <div class="mx-auto mt-6 flex max-w-36 items-center gap-3 text-[#e8a7b9]">
-                <span class="h-px flex-1 bg-gradient-to-r from-transparent to-[#cbd9e3]"></span>
-                <.icon name="hero-heart-solid" class="size-3.5" />
-                <span class="h-px flex-1 bg-gradient-to-l from-transparent to-[#cbd9e3]"></span>
-              </div>
-              <p class="mt-5 font-wedding-serif text-sm tracking-[0.18em] text-[#617080]">
-                01 · 11 · 2026
-              </p>
-            </div>
-          </div>
+    <div class="seating-guide-inner">
+      <header class="seating-guide-heading">
+        <p class="seating-guide-eyebrow">Good company, a place together</p>
+        <h2 id="wedding-seating-title">นั่งด้วยกัน ตรงนี้เลย</h2>
+        <p>เลือกนั่งโต๊ะในกลุ่มของคุณได้ตามสะดวก</p>
+        <span>ไม่ต้องจองที่นั่งล่วงหน้า · โต๊ะที่มีหลายกลุ่มนั่งร่วมกันได้เลย</span>
+      </header>
+      <div :if={@seating_tables == []} id="wedding-seating-status" class="guide-empty">
+        กำลังจัดเตรียมผังโต๊ะ แล้วพบกันในวันงานนะ
+      </div>
+      <div :if={@seating_tables != []} id="public-seating-plan" data-seating-guide>
+        <div class="guide-section-label">
+          <span>01</span>
+          <h3>โต๊ะสำหรับกลุ่มของคุณ</h3>
+          <small class="guide-interactive-hint">แตะกลุ่มเพื่อดูตำแหน่งโต๊ะ</small>
         </div>
-
+        <div id="public-group-directory" class="guide-groups">
+          <%= for group <- @seating_groups do %>
+            <% tables = Enum.filter(@seating_tables, &Neko.Seating.in_group?(&1, group.id)) %>
+            <button
+              id={"public-group-#{group.id}"}
+              type="button"
+              class="guide-group"
+              data-guide-group={group.id}
+              data-group-name={group.name}
+              aria-pressed="false"
+              aria-controls="guest-venue-map"
+              disabled={tables == []}
+              style={"--guide-color: #{group.color}"}
+            >
+              <span class="guide-group-name">
+                <i aria-hidden="true"></i>{group.name}<.icon
+                  name="hero-check-circle"
+                  class="guide-group-check size-5"
+                />
+              </span>
+              <span class="guide-group-tables">
+                <span class="guide-table-prefix">โต๊ะ</span><strong :for={table <- tables}>{table.label}</strong><span
+                  :if={tables == []}
+                  class="guide-pending"
+                >กำลังจัดโต๊ะให้กลุ่มนี้</span>
+              </span>
+            </button>
+          <% end %>
+        </div>
         <div
-          id="wedding-seating-status"
-          class="flex flex-col items-center justify-center px-8 py-10 text-center sm:px-10"
+          id="guide-map-card"
+          class="guide-map-card"
+          tabindex="-1"
+          aria-labelledby="guide-map-title"
         >
-          <span class="grid size-14 place-items-center rounded-full bg-[#8fa9c2]/15 text-[#6d8ca5]">
-            <.icon name="hero-map" class="size-6" />
-          </span>
-          <span class="mt-6 rounded-full border border-[#8fa9c2]/25 bg-[#8fa9c2]/10 px-4 py-2 text-[0.65rem] font-semibold tracking-[0.3em] text-[#5f7f96] uppercase">
-            Coming Soon
-          </span>
-          <p class="mt-5 font-wedding-serif text-lg leading-relaxed text-[#536270]">
-            เราจะเปิดให้ค้นหาโต๊ะและที่นั่ง<br />ได้ที่นี่ใกล้วันงาน
+          <div class="guide-map-header">
+            <div class="guide-section-label">
+              <span>02</span>
+              <h3 id="guide-map-title">โต๊ะอยู่ตรงไหนนะ</h3>
+            </div>
+            <button id="guide-reset" type="button" class="guide-reset" data-guide-reset>
+              ดูทุกโต๊ะ <.icon name="hero-arrow-path" class="size-3.5" />
+            </button>
+          </div>
+          <p
+            id="guide-selection-status"
+            class="guide-selection-status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            แผนผังทุกโต๊ะ · ทางเข้าด้านซ้ายและขวาล่าง
+          </p>
+          <div
+            id="guest-venue-map"
+            class="guest-venue-map"
+            aria-label="แผนผังโต๊ะ เวทีด้านบน ทางเดินตรงกลาง และทางเข้าด้านซ้ายและขวาล่าง"
+          >
+            <div class="guest-map-stage">
+              <span>เวที</span><strong>Bee <i>&amp;</i> Boom</strong>
+            </div>
+            <div class="guest-map-aisle">
+              <span>ทางเดิน</span> <.icon name="hero-heart" class="size-4" />
+            </div>
+            <div
+              :for={table <- @seating_tables}
+              id={"guest-map-table-#{table.id}"}
+              data-guide-table={table.label}
+              data-group-ids={Enum.map_join(table.groups, " ", & &1.id)}
+              class={[
+                "guest-map-table",
+                table.shape,
+                String.length(table.label) > 2 && "long-label"
+              ]}
+              style={NekoWeb.VenueMap.table_style(table) <> NekoWeb.VenueMap.table_colors(table)}
+              aria-label={"โต๊ะ #{table.label} · #{NekoWeb.VenueMap.group_names(table)}"}
+            >
+              <span>โต๊ะ</span><strong>{table.label}</strong>
+            </div>
+            <div class="guest-map-entrance">
+              <.icon name="hero-arrow-right" class="size-5" />
+              <span>
+                ทางเข้า<small>ยินดีต้อนรับ</small>
+              </span>
+            </div>
+            <div class="guest-map-entrance right">
+              <span>ทางเข้า<small>ยินดีต้อนรับ</small></span>
+              <.icon name="hero-arrow-left" class="size-5" />
+            </div>
+            <div class="guest-map-buffet">บุฟเฟต์</div>
+            <div class="guest-map-drinks">เครื่องดื่ม</div>
+          </div>
+          <a class="guide-back" href="#public-group-directory">↑ เลือกกลุ่มอื่น</a>
+          <p class="guide-map-footnote">
+            <.icon name="hero-heart" class="size-4" />เลือกโต๊ะแล้ว จัดที่นั่งกับเพื่อน ๆ ได้เลยนะ
           </p>
         </div>
       </div>

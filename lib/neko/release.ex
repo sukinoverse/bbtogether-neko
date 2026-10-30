@@ -13,6 +13,17 @@ defmodule Neko.Release do
     end
   end
 
+  def initialize_seating do
+    load_app()
+
+    layout = Neko.Seating.saved_layout()
+
+    {:ok, result, _} =
+      Ecto.Migrator.with_repo(Neko.Repo, fn _repo -> Neko.Seating.initialize_layout(layout) end)
+
+    result
+  end
+
   def rollback(repo, version) do
     load_app()
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))

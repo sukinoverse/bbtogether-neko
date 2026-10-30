@@ -1,0 +1,149 @@
+{
+  "captured_at": "2026-10-30T16:53:19.437866Z",
+  "groups": [
+    {
+      "code": "A",
+      "color": "#b4a3c8",
+      "expected_guests": null,
+      "name": "VIP เจ้าบ่าว"
+    },
+    {
+      "code": "B",
+      "color": "#91ad91",
+      "expected_guests": null,
+      "name": "VIP เจ้าสาว"
+    },
+    {
+      "code": "C",
+      "color": "#91adc2",
+      "expected_guests": null,
+      "name": "ญาติเจ้าสาว ลพบุรี"
+    },
+    {
+      "code": "D",
+      "color": "#d4b18b",
+      "expected_guests": null,
+      "name": "P.B. 111/6"
+    },
+    {
+      "code": "E",
+      "color": "#b98b92",
+      "expected_guests": null,
+      "name": "NRMU #42"
+    },
+    {
+      "code": "F",
+      "color": "#8aa69f",
+      "expected_guests": null,
+      "name": "RAMA & CNMI"
+    },
+    {
+      "code": "G",
+      "color": "#bca883",
+      "expected_guests": null,
+      "name": "B.Care"
+    },
+    {
+      "code": "H",
+      "color": "#b292b3",
+      "expected_guests": null,
+      "name": "ญาติเจ้าบ่าว ระยอง"
+    },
+    {
+      "code": "I",
+      "color": "#8d9fbc",
+      "expected_guests": null,
+      "name": "CMU & PRC"
+    },
+    {
+      "code": "J",
+      "color": "#ab9b85",
+      "expected_guests": null,
+      "name": "FASTWORK"
+    }
+  ],
+  "tables": [
+    {
+      "capacity": 10,
+      "group_codes": [
+        "B"
+      ],
+      "label": "A",
+      "shape": "round",
+      "slot": 2
+    },
+    {
+      "capacity": 10,
+      "group_codes": [
+        "A"
+      ],
+      "label": "B",
+      "shape": "round",
+      "slot": 3
+    },
+    {
+      "capacity": 20,
+      "group_codes": [
+        "C"
+      ],
+      "label": "C",
+      "shape": "long",
+      "slot": 5
+    },
+    {
+      "capacity": 20,
+      "group_codes": [
+        "E"
+      ],
+      "label": "D",
+      "shape": "long",
+      "slot": 6
+    },
+    {
+      "capacity": 20,
+      "group_codes": [
+        "J"
+      ],
+      "label": "E",
+      "shape": "long",
+      "slot": 7
+    },
+    {
+      "capacity": 20,
+      "group_codes": [
+        "H",
+        "I"
+      ],
+      "label": "F",
+      "shape": "long",
+      "slot": 8
+    },
+    {
+      "capacity": 10,
+      "group_codes": [
+        "G"
+      ],
+      "label": "G",
+      "shape": "long",
+      "slot": 9
+    },
+    {
+      "capacity": 20,
+      "group_codes": [
+        "F"
+      ],
+      "label": "H",
+      "shape": "long",
+      "slot": 10
+    },
+    {
+      "capacity": 20,
+      "group_codes": [
+        "D"
+      ],
+      "label": "I",
+      "shape": "long",
+      "slot": 11
+    }
+  ]
+}

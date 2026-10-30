@@ -177,6 +177,9 @@ defmodule NekoWeb.CoreComponents do
   attr :class, :any, default: nil, doc: "the input class to use over defaults"
   attr :error_class, :any, default: nil, doc: "the input error class to use over defaults"
 
+  attr :checked_value, :string, default: "true"
+  attr :unchecked_value, :string, default: "false"
+
   attr :rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
                 multiple pattern placeholder readonly required rows size step)
@@ -210,7 +213,7 @@ defmodule NekoWeb.CoreComponents do
         <input
           type="hidden"
           name={@name}
-          value="false"
+          value={@unchecked_value}
           disabled={@rest[:disabled]}
           form={@rest[:form]}
         />
@@ -219,7 +222,7 @@ defmodule NekoWeb.CoreComponents do
             type="checkbox"
             id={@id}
             name={@name}
-            value="true"
+            value={@checked_value}
             checked={@checked}
             class={@class || "checkbox checkbox-sm"}
             {@rest}

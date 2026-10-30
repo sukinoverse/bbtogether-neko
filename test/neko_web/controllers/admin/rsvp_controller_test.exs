@@ -42,7 +42,7 @@ defmodule NekoWeb.Admin.RsvpControllerTest do
              "0812345678"
 
     assert document |> LazyHTML.query("#guest-#{attending.id}") |> LazyHTML.text() =~
-             "Not assigned"
+             "Choose a seat within your group"
 
     assert document |> LazyHTML.query("#guest-#{declined.id}") |> LazyHTML.text() =~
              "Not attending"

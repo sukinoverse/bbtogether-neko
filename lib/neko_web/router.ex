@@ -30,6 +30,16 @@ defmodule NekoWeb.Router do
 
     get "/", RsvpController, :index
     get "/guests", RsvpController, :index
+    get "/seating", SeatingController, :index
+    get "/seating/export", SeatingController, :export
+    post "/seating/apply-layout", SeatingController, :apply_layout
+    put "/seating/visibility", SeatingController, :visibility
+    post "/seating/groups", SeatingController, :save_group
+    put "/seating/groups/:id", SeatingController, :save_group
+    delete "/seating/groups/:id", SeatingController, :delete_group
+    post "/seating/tables", SeatingController, :save_table
+    put "/seating/tables/:id", SeatingController, :save_table
+    delete "/seating/tables/:id", SeatingController, :delete_table
   end
 
   # Other scopes may use custom stacks.

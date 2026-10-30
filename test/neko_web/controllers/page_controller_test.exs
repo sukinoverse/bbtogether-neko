@@ -3,13 +3,151 @@ defmodule NekoWeb.PageControllerTest do
 
   alias Neko.{Repo, Rsvp}
 
+  test "public map shows table groups with no admin controls or guest data", %{conn: conn} do
+    {:ok, _} = Neko.Seating.update_visibility(%{public_enabled: true})
+
+    {:ok, group} =
+      Neko.Seating.save_group(%Neko.Seating.Group{}, %{
+        code: "A",
+        name: "Friends",
+        color: "#aabbcc",
+        expected_guests: 123
+      })
+
+    {:ok, table} =
+      Neko.Seating.save_table(%Neko.Seating.Table{}, %{
+        label: "B",
+        slot: 2,
+        capacity: 10,
+        shape: "round",
+        group_ids: [group.id]
+      })
+
+    Repo.insert!(%Rsvp{name: "Private RSVP", phone: "0812345678", attending: true, party_size: 2})
+    doc = conn |> get(~p"/") |> html_response(200) |> LazyHTML.from_document()
+    assert doc |> LazyHTML.query("#public-seating-plan") |> Enum.count() == 1
+
+    assert doc |> LazyHTML.query("#find-seating") |> LazyHTML.attribute("href") == [
+             "#wedding-seating"
+           ]
+
+    assert doc |> LazyHTML.query("#guide-map-card[tabindex='-1']") |> Enum.count() == 1
+
+    assert doc
+           |> LazyHTML.query("#guest-map-table-#{table.id}")
+           |> LazyHTML.attribute("data-group-ids") == [to_string(group.id)]
+
+    assert doc |> LazyHTML.query("#public-group-#{group.id}") |> LazyHTML.text() =~ "Friends"
+    assert doc |> LazyHTML.query("#public-group-#{group.id} strong") |> LazyHTML.text() == "B"
+
+    assert doc
+           |> LazyHTML.query(
+             "#public-table-directory, #wedding-seating .venue-chair, #wedding-seating .table-occupancy"
+           )
+           |> Enum.count() == 0
+
+    assert doc
+           |> LazyHTML.query("#wedding-seating a[href^='/admin'], #table-form, #group-form")
+           |> Enum.count() == 0
+
+    refute doc |> LazyHTML.query("#wedding-seating") |> LazyHTML.text() =~ "Private RSVP"
+    refute doc |> LazyHTML.query("#wedding-seating") |> LazyHTML.text() =~ "123"
+  end
+
+  test "revised layout renders nine tables, two gates, and refreshments", %{conn: conn} do
+    layout = File.read!("priv/repo/venue_layout.json") |> Jason.decode!()
+    assert {:ok, :initialized} = Neko.Seating.initialize_layout(layout)
+    {:ok, _} = Neko.Seating.update_visibility(%{public_enabled: true})
+    doc = conn |> get(~p"/") |> html_response(200) |> LazyHTML.from_document()
+
+    assert doc |> LazyHTML.query("#guest-venue-map [data-guide-table]") |> Enum.count() == 9
+    assert doc |> LazyHTML.query("#guest-venue-map .round") |> Enum.count() == 2
+    assert doc |> LazyHTML.query("#guest-venue-map .guest-map-entrance") |> Enum.count() == 2
+    assert doc |> LazyHTML.query("#guest-venue-map .guest-map-buffet") |> Enum.count() == 1
+    assert doc |> LazyHTML.query("#guest-venue-map .guest-map-drinks") |> Enum.count() == 1
+
+    short = doc |> LazyHTML.query("[data-guide-table='G']") |> LazyHTML.attribute("style") |> hd()
+    long = doc |> LazyHTML.query("[data-guide-table='H']") |> LazyHTML.attribute("style") |> hd()
+    assert short =~ "height: 10.0%"
+    assert long =~ "height: 20.0%"
+  end
+
+  test "shared tables appear under both groups before any interaction", %{conn: conn} do
+    {:ok, _} = Neko.Seating.update_visibility(%{public_enabled: true})
+
+    {:ok, groom} =
+      Neko.Seating.save_group(%Neko.Seating.Group{}, %{
+        code: "G",
+        name: "Groom friends",
+        color: "#aabbcc"
+      })
+
+    {:ok, bride} =
+      Neko.Seating.save_group(%Neko.Seating.Group{}, %{
+        code: "B",
+        name: "Bride friends",
+        color: "#ccbbaa"
+      })
+
+    {:ok, table} =
+      Neko.Seating.save_table(%Neko.Seating.Table{}, %{
+        label: "C",
+        slot: 3,
+        capacity: 10,
+        shape: "round",
+        group_ids: [groom.id, bride.id]
+      })
+
+    doc = conn |> get(~p"/") |> html_response(200) |> LazyHTML.from_document()
+
+    for group <- [groom, bride] do
+      assert doc |> LazyHTML.query("#public-group-#{group.id} strong") |> LazyHTML.text() == "C"
+
+      assert doc
+             |> LazyHTML.query("#guest-map-table-#{table.id}")
+             |> LazyHTML.attribute("data-group-ids")
+             |> hd()
+             |> String.split()
+             |> Enum.member?(to_string(group.id))
+    end
+  end
+
+  test "seating is hidden by default and follows persisted visibility", %{conn: conn} do
+    {:ok, group} =
+      Neko.Seating.save_group(%Neko.Seating.Group{}, %{
+        code: "D",
+        name: "Draft group",
+        color: "#aabbcc"
+      })
+
+    {:ok, _} =
+      Neko.Seating.save_table(%Neko.Seating.Table{}, %{
+        label: "Z",
+        slot: 1,
+        shape: "long",
+        capacity: 20,
+        group_ids: [group.id]
+      })
+
+    doc = conn |> get(~p"/") |> html_response(200) |> LazyHTML.from_document()
+    assert doc |> LazyHTML.query("#wedding-seating") |> Enum.empty?()
+    refute LazyHTML.text(doc) =~ "Draft group"
+    Neko.Seating.update_visibility(%{public_enabled: true})
+    doc = conn |> recycle() |> get(~p"/") |> html_response(200) |> LazyHTML.from_document()
+    assert doc |> LazyHTML.query("#public-group-#{group.id}") |> Enum.count() == 1
+    Neko.Seating.update_visibility(%{public_enabled: false})
+    doc = conn |> recycle() |> get(~p"/") |> html_response(200) |> LazyHTML.from_document()
+    assert doc |> LazyHTML.query("#wedding-seating") |> Enum.empty?()
+    assert length(Neko.Seating.tables()) == 1
+  end
+
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
     html = html_response(conn, 200)
     document = LazyHTML.from_document(html)
 
     for section <-
-          ~w(wedding-hero wedding-invitation wedding-story wedding-schedule wedding-venue wedding-rsvp wedding-seating wedding-theme wedding-guestbook) do
+          ~w(wedding-hero wedding-invitation wedding-story wedding-schedule wedding-venue wedding-rsvp wedding-theme wedding-guestbook) do
       assert document |> LazyHTML.query("##{section}") |> Enum.count() == 1
     end
 
@@ -42,7 +180,7 @@ defmodule NekoWeb.PageControllerTest do
     assert document |> LazyHTML.query("#wedding-music-toggle") |> Enum.count() == 1
     assert document |> LazyHTML.query("#wedding-music[autoplay][loop]") |> Enum.count() == 1
 
-    for status <- ~w(wedding-seating-status wedding-guestbook-status) do
+    for status <- ~w(wedding-guestbook-status) do
       assert document
              |> LazyHTML.query("##{status}")
              |> LazyHTML.text()

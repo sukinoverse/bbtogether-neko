@@ -1,0 +1,474 @@
+<div id="seating-studio" class="seating-studio">
+  <.admin_header />
+  <main class="studio-main">
+    <nav class="studio-breadcrumb">
+      <a href={~p"/admin"}>Wedding desk</a><span>/</span> Seating studio
+    </nav>
+    <header class="studio-heading">
+      <div>
+        <p class="studio-eyebrow">A place for everyone you love</p>
+        <h1>Seating studio<span>.</span></h1>
+        <p>จัดที่นั่งให้คนสำคัญ ในวันสำคัญของเรา</p>
+      </div>
+      <div class="studio-date">
+        <.icon name="hero-sparkles" class="size-5" />
+        <span>
+          Bee &amp; Boom<strong>01 November 2026</strong>
+        </span>
+      </div>
+    </header>
+    <div :if={Phoenix.Flash.get(@flash, :info) && !@selected} role="status" class="studio-notice">
+      {Phoenix.Flash.get(@flash, :info)}
+    </div>
+    <div :if={Phoenix.Flash.get(@flash, :error)} role="alert" class="studio-notice studio-error">
+      {Phoenix.Flash.get(@flash, :error)}
+    </div>
+    <details
+      id="seating-visibility"
+      class="studio-card visibility-settings"
+      open={@visibility_form.errors != []}
+    >
+      <summary>
+        <span><.icon name="hero-eye" class="size-5" />Guest website</span>
+        <strong>{if @public_enabled, do: "Visible to guests", else: "Hidden from guests"}</strong>
+        <span class="visibility-edit">Change</span>
+      </summary>
+      <div class="visibility-card">
+        <div>
+          <p class="studio-eyebrow">Main website visibility</p>
+          <h2>{if @public_enabled, do: "Visible to guests", else: "Hidden while you plan"}</h2>
+          <p>
+            Keep the guide hidden while arranging tables. Turn it on when you’re ready for guests to see it.
+          </p>
+          <p :if={@public_enabled} class="visibility-live-note">
+            Changes you save to tables and groups will appear on the main website.
+          </p>
+        </div>
+        <.form
+          for={@visibility_form}
+          id="visibility-form"
+          action={~p"/admin/seating/visibility"}
+          method="put"
+        >
+          <.input
+            field={@visibility_form[:public_enabled]}
+            type="checkbox"
+            label="Show seating guide on main website"
+            class="group-checkbox"
+          />
+          <button id="save-visibility" class="studio-button">Save visibility</button>
+        </.form>
+      </div>
+    </details>
+    <details id="saved-seating-plan" class="studio-planning-notes">
+      <summary>
+        Apply saved seating plan · {length(@saved_layout["tables"])} tables / {@saved_capacity} seats
+      </summary>
+      <p class="detail-description">
+        This plan was captured from the dev seating studio and included in this deployment.
+        Applying it replaces all current seating groups, tables, and assignments on this website.
+        RSVPs and the main website visibility setting stay unchanged.
+      </p>
+      <p :if={@saved_layout["captured_at"]} class="detail-description">
+        Snapshot: <time>{@saved_layout["captured_at"]}</time>
+      </p>
+      <ul
+        id="saved-layout-tables"
+        class="saved-layout-tables"
+        aria-label="Saved table assignments"
+      >
+        <li :for={table <- @saved_layout["tables"]}>
+          <strong>Table {table["label"]}</strong>
+          <span>
+            {Enum.map_join(table["group_codes"], " + ", &Map.fetch!(@saved_groups, &1))}
+          </span>
+          <small>{table["capacity"]} seats</small>
+        </li>
+      </ul>
+      <a id="download-seating-backup" class="studio-secondary" href={~p"/admin/seating/export"}>
+        <.icon name="hero-arrow-down-tray" class="size-4" />Download current seating backup
+      </a>
+      <.form
+        for={@import_form}
+        id="apply-layout-form"
+        action={~p"/admin/seating/apply-layout"}
+        method="post"
+        class="saved-layout-form"
+      >
+        <.input field={@import_form[:revision]} type="hidden" />
+        <.input
+          field={@import_form[:confirmed]}
+          type="checkbox"
+          required
+          label="I confirm: replace the current seating with this saved plan."
+          class="group-checkbox"
+        />
+        <button id="apply-saved-layout" class="studio-button" type="submit">
+          <.icon name="hero-arrow-path" class="size-4" />Replace seating with saved plan
+        </button>
+      </.form>
+    </details>
+    <details class="studio-planning-notes">
+      <summary>Group capacity &amp; seating notes</summary>
+      <section id="group-seating-explainer" class="studio-notice group-seating-intro">
+        <.icon name="hero-user-group" class="size-5 shrink-0" />
+        <div>
+          <strong>A table for every group. No guest list required.</strong>
+          <p>แขกเลือกนั่งโต๊ะในกลุ่มของตัวเองได้ ไม่จำเป็นต้องลงทะเบียน RSVP</p>
+          <p>
+            Plan for everyone, including physical-card guests. Guests arrange their own seats within their group.
+          </p>
+        </div>
+      </section>
+      <section
+        :if={@tab == "map" && @groups != []}
+        id="group-capacity-summary"
+        class="group-capacity-summary"
+        aria-label="Seats planned by group"
+      >
+        <a
+          :for={plan <- @group_plans}
+          id={"group-plan-#{plan.group.id}"}
+          href={(~p"/admin/seating?tab=groups&group=#{plan.group.id}" <> "#group-editor")}
+          class="group-capacity-card"
+          style={"--group-color: #{plan.group.color}"}
+        >
+          <span class="group-capacity-code">{plan.group.code}</span>
+          <div>
+            <strong>{plan.group.name}</strong>
+            <p>
+              {plan.capacity - plan.shared} exclusive + {plan.shared} shared seats · {if is_nil(
+                                                                                           plan.group.expected_guests
+                                                                                         ),
+                                                                                         do:
+                                                                                           "estimate not set",
+                                                                                         else:
+                                                                                           "#{plan.group.expected_guests} expected"}
+            </p>
+            <small :if={plan.shortage > 0} class="group-shortage">
+              Add {plan.shortage} more seats
+            </small>
+          </div>
+        </a>
+      </section>
+
+      <p id="shared-capacity-note" class="detail-description">
+        Shared seats are available to every group on that table, not reserved separately for each group. The venue total counts each seat once.
+      </p>
+    </details>
+    <section class="studio-stats group-only-stats" aria-label="Group seating overview">
+      <div>
+        <span class="stat-icon"><.icon name="hero-squares-2x2" class="size-5" /></span>
+        <p>
+          <strong>{@capacity}<small> seats</small></strong><span>Across {length(@tables)} tables</span>
+        </p>
+      </div>
+      <div>
+        <span class="stat-icon"><.icon name="hero-heart" class="size-5" /></span>
+        <p>
+          <strong>{length(@groups)}<small> groups</small></strong><span>Sit anywhere within your group</span>
+        </p>
+      </div>
+      <div>
+        <span class="stat-icon"><.icon name="hero-users" class="size-5" /></span>
+        <p id="estimated-guests-stat">
+          <strong>{if @estimated_groups == 0, do: "—", else: @estimated_guests}</strong><span>Estimated guests · {@estimated_groups}/{length(@groups)} groups set</span>
+        </p>
+      </div>
+    </section>
+    <nav class="studio-tabs" aria-label="Seating views">
+      <a
+        id="map-tab"
+        aria-current={if @tab == "map", do: "page"}
+        class={if @tab == "map", do: "active"}
+        href={(~p"/admin/seating" <> "#seating-workspace")}
+      >
+        <.icon name="hero-map" class="size-4" />Venue map
+      </a>
+      <a
+        id="groups-tab"
+        aria-current={if @tab == "groups", do: "page"}
+        class={if @tab == "groups", do: "active"}
+        href={(~p"/admin/seating?tab=groups" <> "#seating-workspace")}
+      >
+        <.icon name="hero-swatch" class="size-4" />Guest groups
+      </a>
+      <span class="studio-private">
+        <.icon name="hero-lock-closed" class="size-3" />Private planning space
+      </span>
+    </nav>
+
+    <section :if={@tab == "map"} id="seating-workspace" class="studio-workspace">
+      <div class="studio-card map-card">
+        <div class="card-heading">
+          <div>
+            <h2>The celebration space</h2>
+            <p>
+              Each table can welcome one or more guest groups. Select a table to change its group or capacity.
+            </p>
+          </div>
+          <a
+            :if={position_options(@tables, nil) != []}
+            id="add-table"
+            class="studio-secondary"
+            href={(~p"/admin/seating" <> "#table-editor")}
+          >
+            <.icon name="hero-plus" class="size-4" />Add table
+          </a>
+        </div>
+        <NekoWeb.VenueMap.map
+          tables={@tables}
+          groups={@groups}
+          editable={true}
+          selected={@selected}
+        />
+      </div>
+      <aside class="studio-sidebar">
+        <section id="table-editor" class="studio-card detail-card" tabindex="-1">
+          <a class="editor-back" href="#seating-workspace">← Back to map</a>
+          <p class="studio-eyebrow">
+            {if @selected && @selected.id, do: "Table details", else: "Make room for memories"}
+          </p>
+          <h2>{if @selected && @selected.id, do: @selected.label, else: "Add a table"}</h2>
+          <p
+            :if={@selected && Phoenix.Flash.get(@flash, :info)}
+            id="table-save-status"
+            role="status"
+            class="studio-notice"
+          >
+            {Phoenix.Flash.get(@flash, :info)}
+          </p>
+          <p class="detail-description">
+            {if @selected && @selected.id,
+              do: "Choose the groups who can sit here, then save.",
+              else: "Choose a group and a position on the floor plan."}
+          </p>
+          <.form
+            :if={position_options(@tables, @selected) != []}
+            for={@table_form}
+            id="table-form"
+            action={
+              if @selected && @selected.id,
+                do: ~p"/admin/seating/tables/#{@selected.id}" <> "#table-editor",
+                else: ~p"/admin/seating/tables" <> "#table-editor"
+            }
+            method={if @selected && @selected.id, do: "put", else: "post"}
+          >
+            <.input
+              field={@table_form[:label]}
+              label="Table letter"
+              placeholder="e.g. A"
+              required
+              class="studio-input"
+            />
+            <fieldset id="table-groups" class="table-group-picker">
+              <legend>Guest groups · choose one or more</legend>
+              <.input
+                :for={group <- @groups}
+                id={"table-group-#{group.id}"}
+                type="checkbox"
+                name="table[group_ids][]"
+                checked_value={to_string(group.id)}
+                unchecked_value=""
+                checked={selected_group?(@table_form, group.id)}
+                label={group.name}
+                class="group-checkbox"
+              />
+              <p
+                :for={{message, _} <- @table_form[:group_ids].errors}
+                class="text-xs text-red-700"
+              >
+                {message}
+              </p>
+              <p class="detail-description">
+                Guests from any selected group can share this table. No individual seats are reserved.
+              </p>
+            </fieldset>
+            <div class="form-pair">
+              <.input
+                field={@table_form[:capacity]}
+                type="number"
+                label="Seats"
+                min="1"
+                max="30"
+                required
+                class="studio-input"
+              /><.input
+                field={@table_form[:shape]}
+                type="select"
+                label="Table shape"
+                options={[{"Long", "long"}, {"Round", "round"}]}
+                class="studio-input"
+              />
+            </div>
+            <.input
+              field={@table_form[:slot]}
+              type="select"
+              label="Map position"
+              options={position_options(@tables, @selected)}
+              prompt="Choose a position"
+              required
+              class="studio-input"
+            />
+            <button id="save-table" class="studio-button" disabled={@groups == []}>
+              <.icon name="hero-check" class="size-4" />{if @selected && @selected.id,
+                do: "Save table",
+                else: "Add table"}
+            </button>
+            <p :if={@groups == []} class="detail-description">
+              <a href={~p"/admin/seating?tab=groups"}>Create a guest group first →</a>
+            </p>
+          </.form>
+          <p :if={position_options(@tables, @selected) == []} class="detail-description">
+            All nine map positions are in use. Select a table on the map to edit its groups or seats.
+          </p>
+          <div :if={@selected && @selected.id} class="table-actions">
+            <a
+              :if={position_options(@tables, nil) != []}
+              href={(~p"/admin/seating" <> "#table-editor")}
+            >
+              + New table
+            </a>
+            <.link
+              id="delete-table"
+              href={~p"/admin/seating/tables/#{@selected.id}"}
+              method="delete"
+              data-confirm="Remove this table from the seating plan? Guest groups and RSVPs will be kept."
+            >
+              Remove table
+            </.link>
+          </div>
+        </section>
+        <div class="studio-tip">
+          <.icon name="hero-heart" class="size-5" />
+          <p>
+            <strong>Everyone is welcome.</strong>Guests can sit at any table in their group and arrange seats themselves. No names or individual seat assignments are needed.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <section
+      :if={@tab == "groups"}
+      id="seating-workspace"
+      class="studio-workspace groups-workspace"
+    >
+      <div class="studio-card">
+        <div class="card-heading">
+          <div>
+            <h2>Guest groups</h2>
+            <p>
+              Edit a group name, color, or guest estimate.
+            </p>
+          </div>
+          <a
+            id="add-group"
+            class="studio-secondary"
+            href={(~p"/admin/seating?tab=groups" <> "#group-editor")}
+          >
+            <.icon name="hero-plus" class="size-4" />Add group
+          </a>
+        </div>
+        <div :if={@groups == []} class="studio-empty">
+          Start with family, friends, or colleagues.
+        </div>
+        <article :for={plan <- @group_plans} id={"group-#{plan.group.id}"} class="group-row">
+          <span class="group-letter" style={"--group-color: #{plan.group.color}"}>
+            {plan.group.code}
+          </span>
+          <div class="group-plan-details">
+            <h3>{plan.group.name}</h3>
+            <p>
+              {plan.tables} tables · {plan.capacity - plan.shared} exclusive + {plan.shared} shared seats
+            </p>
+            <%= cond do %>
+              <% is_nil(plan.group.expected_guests) -> %>
+                <p id={"group-estimate-#{plan.group.id}"}>
+                  Estimate not set · guests do not need to RSVP
+                </p>
+              <% plan.shortage > 0 -> %>
+                <p id={"group-shortage-#{plan.group.id}"} class="group-shortage" role="status">
+                  {plan.group.expected_guests} estimated guests · add {plan.shortage} more seats
+                </p>
+              <% true -> %>
+                <p id={"group-estimate-#{plan.group.id}"}>
+                  {plan.group.expected_guests} estimated guests · {if plan.shared > 0,
+                    do: "capacity is shared with other groups",
+                    else: "#{plan.capacity - plan.group.expected_guests} seats above estimate"}
+                </p>
+            <% end %>
+          </div>
+          <a
+            id={"edit-group-#{plan.group.id}"}
+            href={(~p"/admin/seating?tab=groups&group=#{plan.group.id}" <> "#group-editor")}
+          >
+            Edit <span aria-hidden="true">↗</span>
+          </a>
+        </article>
+      </div>
+      <aside id="group-editor" class="studio-card detail-card" tabindex="-1">
+        <a class="editor-back" href="#seating-workspace">← Back to groups</a>
+        <p class="studio-eyebrow">Your people, your way</p>
+        <h2>{if @editing_group, do: "Edit group", else: "A new circle"}</h2>
+        <.form
+          for={@group_form}
+          id="group-form"
+          action={
+            if @editing_group,
+              do: ~p"/admin/seating/groups/#{@editing_group}" <> "#group-editor",
+              else: ~p"/admin/seating/groups" <> "#group-editor"
+          }
+          method={if @editing_group, do: "put", else: "post"}
+        >
+          <.input
+            field={@group_form[:code]}
+            label="Group letter"
+            placeholder="A"
+            maxlength="3"
+            required
+            class="studio-input"
+          />
+          <.input
+            field={@group_form[:name]}
+            label="Group name"
+            placeholder="เพื่อนเจ้าบ่าว + เพื่อนเจ้าสาว"
+            required
+            class="studio-input"
+          />
+          <.input
+            field={@group_form[:expected_guests]}
+            type="number"
+            label="Estimated guests (optional)"
+            min="0"
+            step="1"
+            placeholder="e.g. 50"
+            aria-describedby="group-estimate-help"
+            class="studio-input"
+          />
+          <p id="group-estimate-help" class="detail-description">
+            Total people in this group, including physical-card guests, online RSVPs, and companions. Count each person once. Leave blank if unknown.
+          </p>
+          <.input
+            field={@group_form[:color]}
+            type="color"
+            label="Group color"
+            required
+            class="studio-input color-input"
+          />
+          <button id="save-group" class="studio-button">
+            {if @editing_group, do: "Save group", else: "Create group"}
+          </button>
+        </.form>
+        <div :if={@editing_group} class="table-actions">
+          <a href={(~p"/admin/seating?tab=groups" <> "#group-editor")}>+ New group</a><.link
+            id="delete-group"
+            href={~p"/admin/seating/groups/#{@editing_group}"}
+            method="delete"
+            data-confirm="Remove this group? Its tables must be moved first."
+          >Remove group</.link>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <.admin_footer />
+</div>

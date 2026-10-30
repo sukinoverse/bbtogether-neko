@@ -34,7 +34,7 @@ defmodule NekoWeb.PageController do
         title: "พิธีขันหมาก",
         sub: "Khan Mak Procession",
         icon: "hero-gift",
-        color: "#8fae83"
+        color: "#8fa9c2"
       },
       %{
         time: "15.30",
